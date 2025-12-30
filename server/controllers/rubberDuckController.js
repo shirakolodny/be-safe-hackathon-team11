@@ -1,5 +1,6 @@
 import ducks from '../data/duckData.js';
 
+
 // Get all ducks
 const getAllDucks = (req, res) => {
     res.status(200).json({ ducks });
@@ -57,7 +58,7 @@ const updateDuck = (req, res) => {
         return res.status(404).json({ mssg: "Duck not found" });
     }
 
-    const updatedDuck = { ...ducks[duckIndex], ...req.body };
+    const updatedDuck = {...ducks[duckIndex], ...req.body };
     ducks[duckIndex] = updatedDuck;
     res.status(200).json({ duck: updatedDuck });
 };
