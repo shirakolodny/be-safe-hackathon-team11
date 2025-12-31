@@ -9,8 +9,6 @@ import TeacherMenu from '../components/teacher/TeacherMenu';
 import CreateGame from '../components/teacher/CreateGame';
 import GameStats from '../components/teacher/GameStats';
 
-// Note: We removed the CSS import!
-
 const TeacherDashboard = () => {
   const [activeView, setActiveView] = useState('menu');
 

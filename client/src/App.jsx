@@ -54,7 +54,7 @@ const styles = {
     fontFamily: 'Rubik, sans-serif', 
     fontWeight: 'bold'
   },
-  // Style for the "Back" button (matches the look of home buttons but smaller)
+  // Style for the "Back" button 
   navButton: {
     fontFamily: 'Rubik, sans-serif',
     fontWeight: 'bold',
