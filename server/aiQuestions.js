@@ -12,4 +12,6 @@ export function getQuestionsForClass(profile) {
     const selectedCategories = [profile.focus, ...(profile.issues || [])];
     const filteredQuestions = allQuestions.filter(q => selectedCategories.includes(q.category));
     return filteredQuestions.length > 0 ? filteredQuestions : allQuestions;
+
+
 }
