@@ -1,5 +1,5 @@
-// client/src/components/ClassProfileForm.jsx
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 export default function ClassProfileForm({ onQuestionsReceived }) {
   const [focus, setFocus] = useState("Cyberbullying");
@@ -10,25 +10,24 @@ export default function ClassProfileForm({ onQuestionsReceived }) {
 
     const profile = {
       focus,
-      issues: issues.split(",").map((i) => i.trim())
+      issues: issues.split(",").map((i) => i.trim()).filter(Boolean)
     };
 
-    // שינוי: כאן תעשי fetch לענף שלך בלבד, אם השרת לא מחובר
     try {
-      const res = await fetch("http://localhost:5000/api/admin/questions", {
+      const res = await fetch("http://localhost:5000/admin/questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile)
       });
 
-      if (!res.ok) throw new Error("Server not ready");
+      if (!res.ok) throw new Error("Server error");
 
       const data = await res.json();
       onQuestionsReceived(data.questions);
     } catch (err) {
-      console.log("Error fetching questions:", err.message);
+      console.error(err);
       onQuestionsReceived([
-        { id: 0, question: "השרת שלך לא מחובר עדיין – תעבוד רק בענף שלך" }
+        { id: 0, question: "השרת לא זמין כרגע" }
       ]);
     }
   };
@@ -48,10 +47,18 @@ export default function ClassProfileForm({ onQuestionsReceived }) {
       <br />
       <label>
         סוגיות נוספות (מופרדות בפסיק):
-        <input type="text" value={issues} onChange={(e) => setIssues(e.target.value)} />
+        <input
+          type="text"
+          value={issues}
+          onChange={(e) => setIssues(e.target.value)}
+        />
       </label>
       <br />
       <button type="submit">קבל שאלות מותאמות</button>
     </form>
   );
 }
+
+ClassProfileForm.propTypes = {
+  onQuestionsReceived: PropTypes.func.isRequired,
+};
