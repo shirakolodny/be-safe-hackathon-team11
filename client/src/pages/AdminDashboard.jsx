@@ -7,7 +7,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1>לוח מורה – התאמת תוכןי</h1>
+      <h1>לוח מורה – התאמת תוכן</h1>
       <ClassProfileForm onQuestionsReceived={setQuestions} />
       {questions.length > 0 && (
         <div>
