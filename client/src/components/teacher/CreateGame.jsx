@@ -9,18 +9,29 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box'; 
 import Chip from '@mui/material/Chip'; 
 import Button from '../common/Button'; 
+// pop-up
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // Define available topics outside the component for better organization
 const TOPICS = [
-  { value: 'cyberbullying', label: 'בריונות ברשת' },
-  { value: 'privacy', label: 'פרטיות ומידע אישי' },
-  { value: 'fakenews', label: 'זיהוי פייק ניוז' },
-  { value: 'shaming', label: 'שיימינג וחרם' }, 
+  { value: 'Cyberbullying', label: 'בריונות ברשת' },
+  { value: 'Privacy', label: 'פרטיות ומידע אישי' },
+  { value: 'Fakenews', label: 'זיהוי פייק ניוז' },
+  { value: 'Shaming', label: 'שיימינג וחרם' }, 
 ];
 
 const CreateGame = ({ onBack }) => {
   // State is now an empty array to support multiple selections
   const [selectedTopics, setSelectedTopics] = useState([]); 
+
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   // Handle changes for multi-select dropdown
   const handleChange = (event) => {
@@ -29,6 +40,34 @@ const CreateGame = ({ onBack }) => {
     setSelectedTopics(
       typeof value === 'string' ? value.split(',') : value,
     );
+  };
+
+  const handleCreateGame = async () => {
+    setLoading(true);
+
+    const profile = {
+      focus: selectedTopics[0] || null,   // main topic (first selected)
+      issues: selectedTopics.slice(1),    // rest as additional issues
+    };
+
+    try {
+      const res = await fetch('http://localhost:5000/admin/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+
+      if (!res.ok) throw new Error('Server error');
+
+      const data = await res.json();
+      setQuestions(data.questions);
+    } catch (err) {
+      console.error(err);
+      setQuestions([{ id: 0, question: 'השרת לא זמין כרגע' }]);
+    } finally {
+      setLoading(false);
+      setOpenDialog(true);
+    }
   };
 
   return (
@@ -73,10 +112,36 @@ const CreateGame = ({ onBack }) => {
           ביטול
         </Button>
         
-        <Button variant="success">
+        {/* <Button variant="success">
+          קבל/י קוד משחק
+        </Button> */}
+
+        <Button
+          variant="success"
+          onClick={handleCreateGame}
+          disabled={selectedTopics.length === 0}
+        >
           קבל/י קוד משחק
         </Button>
+
       </Stack>
+
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth>
+        <DialogTitle>השאלות שנבחרו</DialogTitle>
+
+        <DialogContent>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <List>
+              {questions.map((q) => (
+                <ListItem key={q.id}>{q.question}</ListItem>
+              ))}
+            </List>
+          )}
+        </DialogContent>
+      </Dialog>
+
     </Paper>
   );
 };
