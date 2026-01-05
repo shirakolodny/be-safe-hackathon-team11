@@ -11,6 +11,16 @@ const StudentLobby = () => {
   const [gameCode, setGameCode] = useState('');
   const [username, setUsername] = useState('');
 
+const handleStart = () => {
+  if (!gameCode.trim() || !username.trim()) {
+    alert("נא למלא קוד משחק וכינוי");
+    return;
+  }
+    navigate(`/student/diagnostic/${gameCode.trim()}`, {
+    state: { username: username.trim() },
+  });
+};
+
   return (
     <Container maxWidth="xs"> 
       
@@ -72,6 +82,7 @@ const StudentLobby = () => {
               fullWidth
               variant="contained"
               color="secondary"
+               onClick={handleStart}
               sx={{ 
                 mt: 2, 
                 mb: 1, 
@@ -79,6 +90,7 @@ const StudentLobby = () => {
                 fontSize: '1.1rem', 
                 fontWeight: 'bold',
                 fontFamily: 'Rubik, sans-serif'
+
               }}
             >
               בואו נתחיל!
