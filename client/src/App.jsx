@@ -14,6 +14,7 @@ import Header from './components/layout/Header';
 import Button from './components/common/Button'; 
 import TeacherDashboard from './pages/TeacherDashboard';
 import StudentLobby from './pages/StudentLobby';
+import StudentDiagnostic from './pages/StudentDiagnostic';
 
 // --- STYLES DEFINITION ---
 // Centralized styles object for cleaner JSX
@@ -79,6 +80,8 @@ const styles = {
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [studentSession, setStudentSession] = useState({ gameCode: '', username: '' });
+
 
   return (
     <Box sx={styles.appWrapper}>
