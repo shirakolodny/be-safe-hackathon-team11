@@ -160,9 +160,35 @@ function App() {
                 חזרה לראשי
               </Button>
             </Box>
-            <StudentLobby />
+           <StudentLobby
+             onStart={({ gameCode, username }) => {
+             setStudentSession({ gameCode, username });
+             setCurrentView('diagnostic');
+             }} 
+            />
+
           </Box>
         )}
+        {/* VIEW: diagnostic Dashboard */}
+       {currentView === 'diagnostic' && (
+          <Box>
+            <Box sx={styles.backButtonWrapper}>
+              <Button
+               variant="secondary"
+               onClick={() => setCurrentView('student')}
+               startIcon={<ArrowForwardIcon />}
+               sx={styles.navButton}
+            >
+                  חזרה
+              </Button>
+           </Box>
+          <StudentDiagnostic
+           gameCode={studentSession.gameCode}
+           username={studentSession.username}
+            />
+          </Box>
+        )}
+
 
       </Container>
 

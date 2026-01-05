@@ -6,20 +6,22 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import SchoolIcon from '@mui/icons-material/School';
+import PropTypes from 'prop-types';
 
-const StudentLobby = () => {
+
+
+const StudentLobby = ({ onStart }) => {
   const [gameCode, setGameCode] = useState('');
   const [username, setUsername] = useState('');
 
-const handleStart = () => {
+  const handleStart = () => {
   if (!gameCode.trim() || !username.trim()) {
     alert("נא למלא קוד משחק וכינוי");
     return;
   }
-    navigate(`/student/diagnostic/${gameCode.trim()}`, {
-    state: { username: username.trim() },
-  });
+  onStart({ gameCode: gameCode.trim(), username: username.trim() });
 };
+
 
   return (
     <Container maxWidth="xs"> 
@@ -104,3 +106,8 @@ const handleStart = () => {
 };
 
 export default StudentLobby;
+
+
+StudentLobby.propTypes = {
+  onStart: PropTypes.func.isRequired,
+};

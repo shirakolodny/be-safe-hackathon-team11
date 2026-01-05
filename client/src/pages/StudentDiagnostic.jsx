@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import PropTypes from "prop-types";
 
 // MUI
 import Container from "@mui/material/Container";
@@ -11,22 +11,16 @@ import TextField from "@mui/material/TextField";
 import LinearProgress from "@mui/material/LinearProgress";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const API_BASE = "http://localhost:5001";
+const API_BASE = "http://localhost:5000";
 
-export default function StudentDiagnostic() {
-  const { code } = useParams(); 
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const username = location.state?.username || "";
-
+const StudentDiagnostic = ({ gameCode, username, onExit, onDone }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [questions, setQuestions] = useState([]);
 
   const [index, setIndex] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
-  const [answers, setAnswers] = useState([]); 
+  const [answers, setAnswers] = useState([]);
 
   const total = questions.length;
   const currentQ = useMemo(() => questions[index], [questions, index]);
@@ -40,9 +34,11 @@ export default function StudentDiagnostic() {
       setError("");
 
       try {
-        // השרת צריך להחזיר: { questions: [{id, question}, ...] }
-        const res = await fetch(`${API_BASE}/games/${encodeURIComponent(code)}/diagnostic`);
+        const res = await fetch(
+          `${API_BASE}/games/${encodeURIComponent(gameCode)}/diagnostic`
+        );
         if (!res.ok) throw new Error("Server error");
+
         const data = await res.json();
 
         if (!ignore) {
@@ -52,24 +48,35 @@ export default function StudentDiagnostic() {
           setCurrentAnswer("");
         }
       } catch {
-        if (!ignore) setError("לא הצלחנו לטעון את שאלות האבחון. בדקי שהקוד נכון וששרת פעיל.");
+        if (!ignore)
+          setError("לא הצלחנו לטעון את שאלות האבחון. בדקי שהקוד נכון וששרת פעיל.");
       } finally {
         if (!ignore) setLoading(false);
       }
     }
 
-    load();
+    if (gameCode && gameCode.trim()) load();
+    else {
+      setError("חסר קוד משחק");
+      setLoading(false);
+    }
+
     return () => {
       ignore = true;
     };
-  }, [code]);
+  }, [gameCode]);
 
   const handleNext = async () => {
     if (!currentQ) return;
+
     const trimmed = currentAnswer.trim();
     if (!trimmed) return;
 
-    const nextAnswers = [...answers, { questionId: currentQ.id, answer: trimmed }];
+    const nextAnswers = [
+      ...answers,
+      { questionId: currentQ.id, answer: trimmed },
+    ];
+
     setAnswers(nextAnswers);
     setCurrentAnswer("");
 
@@ -79,13 +86,12 @@ export default function StudentDiagnostic() {
       return;
     }
 
-    // אחרון -> שליחה לשרת
     try {
       setLoading(true);
       setError("");
 
       const res = await fetch(
-        `${API_BASE}/games/${encodeURIComponent(code)}/diagnostic/answers`,
+        `${API_BASE}/games/${encodeURIComponent(gameCode)}/diagnostic/answers`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -95,7 +101,7 @@ export default function StudentDiagnostic() {
 
       if (!res.ok) throw new Error("Submit failed");
 
-      navigate("/student/done", { replace: true });
+      onDone?.();
     } catch {
       setError("שמירת התשובות נכשלה. נסי שוב.");
       setLoading(false);
@@ -123,7 +129,7 @@ export default function StudentDiagnostic() {
           <Typography color="text.secondary" sx={{ mb: 2 }}>
             {error}
           </Typography>
-          <Button variant="contained" onClick={() => navigate(-1)}>
+          <Button variant="contained" onClick={onExit}>
             חזרה
           </Button>
         </Paper>
@@ -141,7 +147,7 @@ export default function StudentDiagnostic() {
           <Typography color="text.secondary" sx={{ mb: 2 }}>
             ייתכן שהמורה לא יצר/ה לומדה או שהקוד שגוי.
           </Typography>
-          <Button variant="contained" onClick={() => navigate(-1)}>
+          <Button variant="contained" onClick={onExit}>
             חזרה
           </Button>
         </Paper>
@@ -155,7 +161,7 @@ export default function StudentDiagnostic() {
         <Typography sx={{ fontWeight: 800, mb: 1 }}>אבחון קצר</Typography>
 
         <Typography color="text.secondary" sx={{ mb: 2 }}>
-          תלמיד/ה: {username || "ללא שם"} • קוד: {code}
+          תלמיד/ה: {username || "ללא שם"} • קוד: {gameCode}
         </Typography>
 
         <LinearProgress variant="determinate" value={progress} sx={{ mb: 2 }} />
@@ -175,7 +181,7 @@ export default function StudentDiagnostic() {
         />
 
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-          <Button variant="outlined" onClick={() => navigate(-1)}>
+          <Button variant="outlined" onClick={onExit}>
             יציאה
           </Button>
 
@@ -190,4 +196,13 @@ export default function StudentDiagnostic() {
       </Paper>
     </Container>
   );
-}
+};
+
+StudentDiagnostic.propTypes = {
+  gameCode: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  onExit: PropTypes.func,
+  onDone: PropTypes.func, 
+};
+
+export default StudentDiagnostic;
