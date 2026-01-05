@@ -51,7 +51,7 @@ const CreateGame = ({ onBack }) => {
     };
 
     try {
-      const res = await fetch('http://localhost:5001/games', {
+      const res = await fetch('http://localhost:5000/games', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profile),

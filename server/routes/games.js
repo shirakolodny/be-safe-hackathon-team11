@@ -3,11 +3,8 @@ import { getQuestionsForClass } from "../aiQuestions.js";
 
 const router = express.Router();
 
-// ===== In-memory storage =====
-// gamesByCode: code -> { questions: [...], profile, createdAt }
 const gamesByCode = new Map();
 
-// answersByGame: code -> [ { username, answers: [...], submittedAt } ]
 const answersByGame = new Map();
 
 function generateGameCode(length = 6) {
@@ -25,7 +22,6 @@ function createUniqueCode() {
   return code;
 }
 
-// 1) Teacher creates a game (and we store X diagnostic questions)
 router.post("/", (req, res) => {
   const profile = req.body;
 
@@ -33,12 +29,10 @@ router.post("/", (req, res) => {
     return res.status(400).json({ error: "Missing class profile" });
   }
 
-  // Get questions from your existing logic
+  const X = Number(profile.x) > 0 ? Number(profile.x) : 10; 
+  const diagnosticQuestions = Array.isArray(allQuestions) ? allQuestions.slice(0, X) : [];
   const allQuestions = getQuestionsForClass(profile);
 
-  // Choose first X questions for diagnostic
-  const X = Number(profile.x) > 0 ? Number(profile.x) : 5; // default 5, or allow teacher to pass x
-  const diagnosticQuestions = Array.isArray(allQuestions) ? allQuestions.slice(0, X) : [];
 
   const gameCode = createUniqueCode();
 
@@ -54,7 +48,6 @@ router.post("/", (req, res) => {
   });
 });
 
-// 2) Student fetches diagnostic questions by code
 router.get("/:code/diagnostic", (req, res) => {
   const code = req.params.code;
   const game = gamesByCode.get(code);
@@ -66,7 +59,7 @@ router.get("/:code/diagnostic", (req, res) => {
   return res.json({ questions: game.questions });
 });
 
-// 3) Student submits answers
+
 router.post("/:code/diagnostic/answers", (req, res) => {
   const code = req.params.code;
   const game = gamesByCode.get(code);
