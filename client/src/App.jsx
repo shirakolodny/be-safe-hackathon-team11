@@ -14,6 +14,7 @@ import Header from './components/layout/Header';
 import Button from './components/common/Button'; 
 import TeacherDashboard from './pages/TeacherDashboard';
 import StudentLobby from './pages/StudentLobby';
+import StudentDiagnostic from './pages/StudentDiagnostic';
 
 // --- STYLES DEFINITION ---
 // Centralized styles object for cleaner JSX
@@ -79,6 +80,8 @@ const styles = {
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [studentSession, setStudentSession] = useState({ gameCode: '', username: '' });
+
 
   return (
     <Box sx={styles.appWrapper}>
@@ -157,9 +160,35 @@ function App() {
                 חזרה לראשי
               </Button>
             </Box>
-            <StudentLobby />
+           <StudentLobby
+             onStart={({ gameCode, username }) => {
+             setStudentSession({ gameCode, username });
+             setCurrentView('diagnostic');
+             }} 
+            />
+
           </Box>
         )}
+        {/* VIEW: diagnostic Dashboard */}
+       {currentView === 'diagnostic' && (
+          <Box>
+            <Box sx={styles.backButtonWrapper}>
+              <Button
+               variant="secondary"
+               onClick={() => setCurrentView('student')}
+               startIcon={<ArrowForwardIcon />}
+               sx={styles.navButton}
+            >
+                  חזרה
+              </Button>
+           </Box>
+          <StudentDiagnostic
+           gameCode={studentSession.gameCode}
+           username={studentSession.username}
+            />
+          </Box>
+        )}
+
 
       </Container>
 
