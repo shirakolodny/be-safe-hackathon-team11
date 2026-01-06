@@ -1,6 +1,6 @@
 import express from 'express';
 // Import the question generator
-import { getQuestionsForClass } from '../aiQuestions.js'; 
+import { getQuestionsForClass } from '../utils/aiQuestions.js'; 
 // Import the game store
 import { createGame, getGame } from '../utils/gameStore.js'; 
 

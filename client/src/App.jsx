@@ -4,27 +4,23 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-// Icons
-// import SchoolIcon from '@mui/icons-material/School';
-// import PersonIcon from '@mui/icons-material/Person';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'; 
 
 // Internal Components
 import Header from './components/layout/Header';
 import Button from './components/common/Button'; 
+
+// Pages
 import TeacherDashboard from './pages/TeacherDashboard';
-import StudentLobby from './pages/StudentLobby';
-import StudentDiagnostic from './pages/StudentDiagnostic';
+import StudentDashboard from './pages/StudentDashboard'; 
 
 // --- STYLES DEFINITION ---
-// Centralized styles object for cleaner JSX
 const styles = {
   appWrapper: {
     minHeight: '100vh',
     backgroundColor: '#f4f6f8',
     display: 'flex',
     flexDirection: 'column',
-    // Global font and direction settings
     fontFamily: 'Rubik, sans-serif', 
     direction: 'rtl' 
   },
@@ -45,17 +41,15 @@ const styles = {
   buttonStack: {
     mt: 6
   },
-  // Style for the large main menu buttons
   roleButton: {
     py: 2, 
     px: 4, 
     fontSize: '1.2rem', 
     borderRadius: 2,
-    width: { xs: '100%', sm: 'auto' }, // Full width on mobile
+    width: { xs: '100%', sm: 'auto' }, 
     fontFamily: 'Rubik, sans-serif', 
     fontWeight: 'bold'
   },
-  // Style for the "Back" button 
   navButton: {
     fontFamily: 'Rubik, sans-serif',
     fontWeight: 'bold',
@@ -79,9 +73,8 @@ const styles = {
 };
 
 function App() {
+  // State to manage the main views: 'home', 'teacher', or 'student'
   const [currentView, setCurrentView] = useState('home');
-  const [studentSession, setStudentSession] = useState({ gameCode: '', username: '' });
-
 
   return (
     <Box sx={styles.appWrapper}>
@@ -90,7 +83,7 @@ function App() {
 
       <Container maxWidth="md" sx={styles.mainContainer}>
 
-        {/* VIEW: Home Screen */}
+        {/* VIEW 1: Home Screen (Role Selection) */}
         {currentView === 'home' && (
           <Box sx={styles.welcomeSection}>
             
@@ -129,15 +122,14 @@ function App() {
           </Box>
         )}
 
-        {/* VIEW: Teacher Dashboard */}
+        {/* VIEW 2: Teacher Dashboard */}
         {currentView === 'teacher' && (
           <Box>
             <Box sx={styles.backButtonWrapper}>
-              {/* Back Button using the new 'navButton' style */}
               <Button 
                 variant="secondary" 
                 onClick={() => setCurrentView('home')}
-                startIcon={<ArrowForwardIcon />} // Right arrow for RTL back
+                startIcon={<ArrowForwardIcon />} 
                 sx={styles.navButton}
               >
                 חזרה לראשי
@@ -147,11 +139,12 @@ function App() {
           </Box>
         )}
 
-        {/* VIEW: Student Lobby */}
+        {/* VIEW 3: Student Dashboard */}
+        {/* Note: This component now handles the Lobby vs Game logic internally */}
         {currentView === 'student' && (
           <Box>
             <Box sx={styles.backButtonWrapper}>
-               <Button 
+                <Button 
                 variant="secondary" 
                 onClick={() => setCurrentView('home')}
                 startIcon={<ArrowForwardIcon />}
@@ -160,35 +153,11 @@ function App() {
                 חזרה לראשי
               </Button>
             </Box>
-           <StudentLobby
-             onStart={({ gameCode, username }) => {
-             setStudentSession({ gameCode, username });
-             setCurrentView('diagnostic');
-             }} 
-            />
+            
+            <StudentDashboard /> 
 
           </Box>
         )}
-        {/* VIEW: diagnostic Dashboard */}
-       {currentView === 'diagnostic' && (
-          <Box>
-            <Box sx={styles.backButtonWrapper}>
-              <Button
-               variant="secondary"
-               onClick={() => setCurrentView('student')}
-               startIcon={<ArrowForwardIcon />}
-               sx={styles.navButton}
-            >
-                  חזרה
-              </Button>
-           </Box>
-          <StudentDiagnostic
-           gameCode={studentSession.gameCode}
-           username={studentSession.username}
-            />
-          </Box>
-        )}
-
 
       </Container>
 
