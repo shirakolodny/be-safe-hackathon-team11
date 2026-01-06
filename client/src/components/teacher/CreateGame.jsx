@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+
 // MUI Imports
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -10,12 +11,11 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip'; 
 import Button from '../common/Button'; 
 
-// Define available topics outside the component for better organization
 const TOPICS = [
   { value: 'Cyberbullying', label: 'בריונות ברשת' },
   { value: 'Privacy', label: 'פרטיות ומידע אישי' },
   { value: 'Fakenews', label: 'זיהוי פייק ניוז' },
-  { value: 'Shaming', label: 'שיימינג וחרם' }, 
+  { value: 'Shaming', label: 'שיימינג וחרם' },
 ];
 
 const CreateGame = ({ onBack, onGameCreated }) => {
@@ -23,13 +23,12 @@ const CreateGame = ({ onBack, onGameCreated }) => {
   const [selectedTopics, setSelectedTopics] = useState([]); 
   const [loading, setLoading] = useState(false);
 
-  // Handle changes for multi-select dropdown
   const handleChange = (event) => {
-    const { target: { value } } = event;
-    // On autofill we get a stringified value.
-    setSelectedTopics(
-      typeof value === 'string' ? value.split(',') : value,
-    );
+    const {
+      target: { value },
+    } = event;
+
+    setSelectedTopics(typeof value === 'string' ? value.split(',') : value);
   };
 
   const handleCreateGame = async () => {
@@ -42,7 +41,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/admin/questions', {
+      const res = await fetch('http://localhost:5000/admin/questions', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profile),
@@ -65,15 +64,14 @@ const CreateGame = ({ onBack, onGameCreated }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto' }}>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
         בחירת נושאים בהם המשחק יתמקד:
       </Typography>
-      
-      {/* Multi-Select Dropdown using TextField */}
+
       <TextField
         select
         label="נושאי השיעור (ניתן לבחור כמה)"
@@ -82,21 +80,18 @@ const CreateGame = ({ onBack, onGameCreated }) => {
         onChange={handleChange}
         sx={{ mb: 4 }}
         dir="rtl"
-        // Configure specific Select component properties for multi-select
         SelectProps={{
-          multiple: true, 
+          multiple: true,
           renderValue: (selected) => (
-            // Render selected items as Chips (bubbles)
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => {
-                const topic = TOPICS.find(t => t.value === value);
+                const topic = TOPICS.find((t) => t.value === value);
                 return <Chip key={value} label={topic ? topic.label : value} />;
               })}
             </Box>
           ),
         }}
       >
-        {/* Generate menu items dynamically from the TOPICS array */}
         {TOPICS.map((topic) => (
           <MenuItem key={topic.value} value={topic.value} dir="rtl">
             {topic.label}
@@ -116,13 +111,11 @@ const CreateGame = ({ onBack, onGameCreated }) => {
         >
           {loading ? 'יוצר משחק...' : 'קבל/י קוד משחק'}
         </Button>
-
       </Stack>
     </Paper>
   );
 };
 
-// Component validation
 CreateGame.propTypes = {
   onBack: PropTypes.func.isRequired,
   onGameCreated: PropTypes.func.isRequired, // Required callback

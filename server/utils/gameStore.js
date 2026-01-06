@@ -1,23 +1,15 @@
 // server/utils/gameStore.js
 
 /**
- * In-memory database to store active games.
- * Key: Game Code (string), Value: Game Object
+ * In-memory database.
+ * Key: Game Code, Value: Game Object
  */
 const games = {}; 
 
-/**
- * Generates a random 6-character alphanumeric code.
- */
 const generateGameCode = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
-/**
- * Creates a new game instance.
- * @param {Array} topics - Array of selected topics
- * @param {Array} questions - Array of questions
- */
 export const createGame = (topics, questions) => {
     let gameCode = generateGameCode();
     while (games[gameCode]) {
@@ -28,34 +20,34 @@ export const createGame = (topics, questions) => {
         id: gameCode,
         topics: topics, 
         isActive: true, 
-        students: [],
-        questions: questions
+        students: [], // [{ username, answers: [] }]
+        questions: questions,
+        createdAt: new Date().toISOString()
     };
     
     console.log(`[GameStore] Game created: ${gameCode}`);
     return games[gameCode];
 };
 
-/**
- * Retrieves a game object by its code.
- */
 export const getGame = (gameCode) => {
     return games[gameCode];
 };
 
-/**
- * Helper: Adds a student to a game (To be connected with Socket/Login logic later)
- */
-export const addStudent = (gameCode, username) => {
+// --- Support Student Actions ---
+
+export const addStudentAnswer = (gameCode, username, answers) => {
     const game = games[gameCode];
     if (!game) return null;
 
-    const newStudent = {
-        username: username,
-        score: 0,
-        finished: false
-    };
+    // Check if student exists, if not create one
+    let student = game.students.find(s => s.username === username);
+    if (!student) {
+        student = { username, answers: [], submittedAt: null };
+        game.students.push(student);
+    }
+
+    student.answers = answers;
+    student.submittedAt = new Date().toISOString();
     
-    game.students.push(newStudent);
-    return newStudent;
+    return student;
 };

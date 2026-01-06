@@ -6,10 +6,22 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import SchoolIcon from '@mui/icons-material/School';
+import PropTypes from 'prop-types';
 
-const StudentLobby = () => {
+
+
+const StudentLobby = ({ onStart }) => {
   const [gameCode, setGameCode] = useState('');
   const [username, setUsername] = useState('');
+
+  const handleStart = () => {
+  if (!gameCode.trim() || !username.trim()) {
+    alert("נא למלא קוד משחק וכינוי");
+    return;
+  }
+  onStart({ gameCode: gameCode.trim(), username: username.trim() });
+};
+
 
   return (
     <Container maxWidth="xs"> 
@@ -72,6 +84,7 @@ const StudentLobby = () => {
               fullWidth
               variant="contained"
               color="secondary"
+               onClick={handleStart}
               sx={{ 
                 mt: 2, 
                 mb: 1, 
@@ -79,6 +92,7 @@ const StudentLobby = () => {
                 fontSize: '1.1rem', 
                 fontWeight: 'bold',
                 fontFamily: 'Rubik, sans-serif'
+
               }}
             >
               בואו נתחיל!
@@ -92,3 +106,8 @@ const StudentLobby = () => {
 };
 
 export default StudentLobby;
+
+
+StudentLobby.propTypes = {
+  onStart: PropTypes.func.isRequired,
+};
