@@ -1,24 +1,26 @@
-import express from 'express';
+import express from "express";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
-import { getQuestionsForClass } from '../aiQuestions.js';
 
-router.post('/questions', (req, res) => {
-    const profile = req.body;
-    console.log("profile", profile)
-    if (!profile || !profile.focus) {
-        return res.status(400).json({ error: 'Missing class profile' });
+// בשביל לעבוד עם path ב־ESM
+const __filename = fileURLToPath(
+    import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dataPath = path.join(__dirname, "../data/situation.json");
+
+router.get("/questions", (req, res) => {
+    try {
+        const rawData = fs.readFileSync(dataPath, "utf-8");
+        const questions = JSON.parse(rawData);
+        res.json(questions);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to load questions" });
     }
-
-    console.log(`Received request for topic: ${profile.focus}`);
-    
-    // res.json({ 
-    //     questions: [], 
-    //     message: "AI logic is currently disabled" 
-    // });
-
-    const questions = getQuestionsForClass(profile);
-    res.json({ questions });
 });
 
 export default router;
