@@ -1,29 +1,34 @@
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import rubberDuckRoutes from './routes/rubberDucks.js'; // Import the routes
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Import routes
+import adminRoutes from './routes/admin.js';
+import gamesRoutes from "./routes/games.js";
+
 
 dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(express.json());
-app.use('/images', express.static(path.join(__dirname, 'images'))); // Serve static images
 
-app.use(cors({
-  origin: process.env.CLIENT_URL
-}));
+// CORS configuration
+app.use(cors());
 
-// Use the routes file for all `/ducks` routes
-app.use('/ducks', rubberDuckRoutes);
+
+
+// Routes
+app.use('/admin', adminRoutes);
+console.log("Admin routes mounted successfully");
+
+app.use("/games", gamesRoutes);
+console.log("Games routes mounted successfully");
+
 
 // Start server
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
