@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 const router = express.Router();
 
-// בשביל path ב־ESM
+
 const __filename = fileURLToPath(
     import.meta.url);
 const __dirname = path.dirname(__filename);
