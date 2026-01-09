@@ -1,26 +1,43 @@
-import express from "express";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import express from 'express';
+// Import the question generator
+import { getQuestionsForClass } from '../utils/aiQuestions.js';
+// Import the game store
+import { createGame, getGame } from '../utils/gameStore.js';
 
 const router = express.Router();
 
+router.post('/questions', (req, res) => {
+    const profile = req.body;
 
-const __filename = fileURLToPath(
-    import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const dataPath = path.join(__dirname, "../data/situation.json");
-
-router.get("/questions", (req, res) => {
-    try {
-        const rawData = fs.readFileSync(dataPath, "utf-8");
-        const questions = JSON.parse(rawData);
-        res.json(questions);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to load questions" });
+    // Validate input
+    if (!profile || !profile.focus) {
+        return res.status(400).json({ error: 'Missing class profile' });
     }
+
+    // 1. Generate real questions using your existing logic
+    const questions = getQuestionsForClass(profile);
+
+    // 2. Create the game instance and save it to the store
+    const newGame = createGame(profile.topics, questions);
+
+    // 3. Return the response with the Game Code and Questions
+    res.json({
+        success: true,
+        gameCode: newGame.id,
+        questions: newGame.questions
+    });
+});
+
+router.get('/game/:code', (req, res) => {
+    const game = getGame(req.params.code);
+    if (!game) return res.status(404).json({ error: 'Game not found' });
+
+    res.json({
+        gameCode: game.id,
+        topics: game.topics, // Return the array
+        studentsCount: game.students.length,
+        students: game.students
+    });
 });
 
 export default router;
