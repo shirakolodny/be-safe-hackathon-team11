@@ -1,14 +1,14 @@
 import express from 'express';
 // Import the question generator
-import { getQuestionsForClass } from '../utils/aiQuestions.js'; 
+import { getQuestionsForClass } from '../utils/aiQuestions.js';
 // Import the game store
-import { createGame, getGame } from '../utils/gameStore.js'; 
+import { createGame, getGame } from '../utils/gameStore.js';
 
 const router = express.Router();
 
 router.post('/questions', (req, res) => {
     const profile = req.body;
-    
+
     // Validate input
     if (!profile || !profile.focus) {
         return res.status(400).json({ error: 'Missing class profile' });
@@ -21,9 +21,9 @@ router.post('/questions', (req, res) => {
     const newGame = createGame(profile.topics, questions);
 
     // 3. Return the response with the Game Code and Questions
-    res.json({ 
+    res.json({
         success: true,
-        gameCode: newGame.id, 
+        gameCode: newGame.id,
         questions: newGame.questions
     });
 });
