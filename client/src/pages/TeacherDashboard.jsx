@@ -30,8 +30,8 @@ const TeacherDashboard = () => {
     <Container maxWidth="md" sx={{ py: 4 }}>
       
       {/* Page Header */}
-      <Box sx={{ mb: 4, borderBottom: '2px solid #3498db', pb: 2 }}>
-        <Typography variant="h5" align="center" sx={{ color: '#2980b9', fontWeight: 'bold' }}>
+      <Box sx={{ mb: 4, borderBottom: '2px solid #2B3752', pb: 2,}}>
+        <Typography variant="h5" align="center" sx={{ color: '#2B3752', fontWeight: 'bold' }}>
           ניהול המשחקים (מורים)
         </Typography>
       </Box>
