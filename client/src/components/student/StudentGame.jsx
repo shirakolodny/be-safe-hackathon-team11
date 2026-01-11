@@ -212,3 +212,7 @@ StudentGame.propTypes = {
 };
 
 export default StudentGame;
+
+
+
+//תיקון באג
