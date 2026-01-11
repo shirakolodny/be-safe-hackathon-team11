@@ -18,8 +18,17 @@ const TOPICS = [
   { value: "Shaming", label: "שיימינג וחרם" },
 ];
 
+// צבעים אחידים לאפליקציה
+const COLORS = {
+  title: "#2B3752",
+  primary: "#2E6E65",
+  primaryHover: "#265751",
+  paperBorder: "rgba(43, 55, 82, 0.12)",
+  softBg: "#E8F6F3",
+  textMuted: "text.secondary",
+};
+
 const CreateGame = ({ onBack, onGameCreated }) => {
-  // State for selected topics
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -35,8 +44,8 @@ const CreateGame = ({ onBack, onGameCreated }) => {
     setLoading(true);
 
     const profile = {
-      topics: selectedTopics, // <--- This sends the whole array ['Cyber', 'Privacy'...]
-      focus: selectedTopics[0], // Keep this if your question generator needs it
+      topics: selectedTopics,
+      focus: selectedTopics[0],
       issues: selectedTopics.slice(1),
     };
 
@@ -50,13 +59,8 @@ const CreateGame = ({ onBack, onGameCreated }) => {
       if (!res.ok) throw new Error("Server error");
 
       const data = await res.json();
-
-      // Check if we received a game code and notify the parent component
-      if (data.gameCode) {
-        onGameCreated(data.gameCode);
-      } else {
-        console.error("No game code returned from server");
-      }
+      if (data.gameCode) onGameCreated(data.gameCode);
+      else console.error("No game code returned from server");
     } catch (err) {
       console.error(err);
       alert("Error creating game");
@@ -66,12 +70,42 @@ const CreateGame = ({ onBack, onGameCreated }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
+    <Paper
+      elevation={0}
+      sx={{
+        p: 4,
+        maxWidth: 650,
+        width: "100%",
+        mx: "auto",
+        borderRadius: 3,
+        border: `1.5px solid ${COLORS.paperBorder}`,
+        backgroundColor: "#fff",
+        direction: "rtl",
+      }}
+    >
       <Typography
         variant="h5"
-        sx={{ mb: 3, fontWeight: "bold", color: "#2B3752" }}
+        sx={{
+          mb: 1,
+          fontWeight: 800,
+          color: COLORS.title,
+          fontFamily: "Rubik, sans-serif",
+          textAlign: "right",
+        }}
       >
-        בחירת נושאים בהם המשחק יתמקד:
+        בחירת נושאים בהם המשחק יתמקד
+      </Typography>
+
+      <Typography
+        variant="body1"
+        sx={{
+          mb: 3,
+          color: COLORS.textMuted,
+          textAlign: "right",
+          lineHeight: 1.8,
+        }}
+      >
+        אפשר לבחור כמה נושאים. לאחר יצירת המשחק יופק קוד כניסה לתלמידים.
       </Typography>
 
       <TextField
@@ -82,70 +116,66 @@ const CreateGame = ({ onBack, onGameCreated }) => {
         onChange={handleChange}
         dir="rtl"
         sx={{
-          mb: 4,
+          mb: 3,
 
-          // טקסט בתוך השדה
+          // טקסט בתוך השדה (הבחירה)
           "& .MuiSelect-select": {
-            color: "#2E6E65",
+            color: COLORS.primary,
+            fontWeight: 600,
           },
 
           // label ברירת מחדל (אפור)
           "& .MuiInputLabel-root": {
-            color: "#9e9e9e",
+            color: "#7b7b7b",
           },
 
           // label בפוקוס (ירוק)
           "& .MuiInputLabel-root.Mui-focused": {
-            color: "#2E6E65",
+            color: COLORS.primary,
           },
 
           // מסגרת רגילה
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#9e9e9e",
+            borderColor: "rgba(43, 55, 82, 0.25)",
           },
 
           // hover על השדה
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#2E6E65",
+            borderColor: COLORS.primary,
           },
 
           // מסגרת בפוקוס
           "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
             {
-              borderColor: "#2E6E65",
+              borderColor: COLORS.primary,
             },
         }}
         SelectProps={{
           multiple: true,
-
-          // עיצוב התפריט הנפתח
           MenuProps: {
             PaperProps: {
               sx: {
+                borderRadius: 2,
+                border: `1px solid ${COLORS.paperBorder}`,
+                mt: 1,
                 "& .MuiMenuItem-root": {
-                  color: "#2E6E65",
+                  color: COLORS.title,
                 },
-
-                // hover על item
                 "& .MuiMenuItem-root:hover": {
                   backgroundColor: "rgba(46,110,101,0.08)",
                 },
-
-                // item שנבחר
                 "& .MuiMenuItem-root.Mui-selected": {
-                  backgroundColor: "rgba(46,110,101,0.15)",
+                  backgroundColor: "rgba(46,110,101,0.16)",
                 },
-
-                // item שנבחר + hover
                 "& .MuiMenuItem-root.Mui-selected:hover": {
-                  backgroundColor: "rgba(46,110,101,0.25)",
+                  backgroundColor: "rgba(46,110,101,0.24)",
                 },
               },
             },
           },
 
           renderValue: (selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75 }}>
               {selected.map((value) => {
                 const topic = TOPICS.find((t) => t.value === value);
                 return (
@@ -153,8 +183,10 @@ const CreateGame = ({ onBack, onGameCreated }) => {
                     key={value}
                     label={topic ? topic.label : value}
                     sx={{
-                      backgroundColor: "#2E6E65",
+                      backgroundColor: COLORS.primary,
                       color: "#fff",
+                      fontWeight: 700,
+                      borderRadius: 2,
                     }}
                   />
                 );
@@ -170,11 +202,47 @@ const CreateGame = ({ onBack, onGameCreated }) => {
         ))}
       </TextField>
 
-      <Stack direction="row" justifyContent="space-between">
+      <Box
+        sx={{
+          p: 2,
+          mb: 3,
+          borderRadius: 2,
+          backgroundColor: COLORS.softBg,
+          border: `1px solid rgba(46,110,101,0.25)`,
+          textAlign: "right",
+        }}
+      >
+        <Typography sx={{ fontWeight: 800, color: COLORS.title, mb: 0.5 }}>
+          נבחרו:
+        </Typography>
+
+        {selectedTopics.length === 0 ? (
+          <Typography color="text.secondary">עדיין לא נבחרו נושאים.</Typography>
+        ) : (
+          <Typography sx={{ color: COLORS.primary, fontWeight: 700 }}>
+            {selectedTopics
+              .map((v) => TOPICS.find((t) => t.value === v)?.label || v)
+              .join(" • ")}
+          </Typography>
+        )}
+      </Box>
+
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Button
           variant="secondary"
           onClick={onBack}
-          sx={{ color: "#2E6E65", borderColor: "#2E6E65" }}
+          sx={{
+            color: COLORS.primary,
+            border: `2px solid ${COLORS.primary}`,
+            backgroundColor: "transparent",
+            fontWeight: "bold",
+            px: 4,
+            py: 1.2,
+            "&:hover": {
+              backgroundColor: COLORS.softBg,
+              borderColor: COLORS.primaryHover,
+            },
+          }}
         >
           ביטול
         </Button>
@@ -184,14 +252,14 @@ const CreateGame = ({ onBack, onGameCreated }) => {
           onClick={handleCreateGame}
           disabled={selectedTopics.length === 0 || loading}
           sx={{
-            backgroundColor: "#2E6E65",
+            backgroundColor: COLORS.primary,
             color: "#fff",
-
+            fontWeight: "bold",
+            px: 4,
+            py: 1.2,
             "&:hover": {
-              backgroundColor: "#265751",
+              backgroundColor: COLORS.primaryHover,
             },
-
-            // מצב disabled
             "&.Mui-disabled": {
               backgroundColor: "#cfcfcf",
               color: "#ffffff",
@@ -207,7 +275,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
 
 CreateGame.propTypes = {
   onBack: PropTypes.func.isRequired,
-  onGameCreated: PropTypes.func.isRequired, // Required callback
+  onGameCreated: PropTypes.func.isRequired,
 };
 
 export default CreateGame;
