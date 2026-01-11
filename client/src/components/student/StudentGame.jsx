@@ -35,7 +35,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
     const startGame = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5001/games/${gameCode}/start?username=${studentName}`
+          `http://localhost:5000/games/${gameCode}/start?username=${studentName}`
         );
         if (!res.ok) throw new Error("Failed to start game");
 
@@ -68,7 +68,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5001/games/${gameCode}/answer`,
+        `http://localhost:5000/games/${gameCode}/answer`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

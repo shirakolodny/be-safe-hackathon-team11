@@ -50,7 +50,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
     };
 
     try {
-      const res = await fetch("http://localhost:5001/admin/questions", {
+      const res = await fetch("http://localhost:5000/admin/questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),

@@ -36,7 +36,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
   const [copied, setCopied] = useState(false);
 
   const API_BASE = (
-    import.meta?.env?.VITE_SERVER_API_URL || "http://localhost:5001"
+    import.meta?.env?.VITE_SERVER_API_URL || "http://localhost:5000"
   ).replace(/\/$/, "");
 
   const topicDisplay = useMemo(() => {
@@ -72,7 +72,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     };
 
     fetchGame();
-    const intervalId = setInterval(fetchGame, 5001);
+    const intervalId = setInterval(fetchGame, 5000);
 
     return () => {
       cancelled = true;

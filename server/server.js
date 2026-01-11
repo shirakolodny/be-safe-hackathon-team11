@@ -1,11 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
 // Import routes
-import adminRoutes from './routes/admin.js';
+import adminRoutes from "./routes/admin.js";
 import gamesRoutes from "./routes/games.js";
-
 
 dotenv.config();
 
@@ -16,29 +15,24 @@ app.use(express.json());
 
 // CORS configuration
 
-
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-}));
-
-
-
-
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 // Routes
-app.use('/admin', adminRoutes);
+app.use("/admin", adminRoutes);
 console.log("Admin routes mounted successfully");
 
 app.use("/games", gamesRoutes);
 console.log("Games routes mounted successfully");
 
-
 // Start server
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
