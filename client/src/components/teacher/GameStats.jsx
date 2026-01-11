@@ -188,8 +188,8 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
           {/* Summary cards */}
           <Stack
             direction={{ xs: "column", md: "row" }}
-            spacing={5}
-            sx={{ alignItems: "stretch" }}
+            spacing={4}
+            sx={{ alignItems: "stretch", gap: 4 }}
           >
             <Paper
               elevation={0}
@@ -200,7 +200,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 border: `1px solid ${THEME.border}`,
                 display: "flex",
                 flexDirection: "column",
-                gap: 1.2, // ✅ רווחים בתוך הכרטיס
+                gap: 1.2,
               }}
             >
               <Typography variant="body2" color="text.secondary">
@@ -223,7 +223,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 border: `1px solid ${THEME.border}`,
                 display: "flex",
                 flexDirection: "column",
-                gap: 1.2, // ✅ רווחים בתוך הכרטיס
+                gap: 1.2,
               }}
             >
               <Typography variant="body2" color="text.secondary">
@@ -288,7 +288,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
             <Stack
               direction={{ xs: "column", md: "row" }}
               spacing={3}
-              alignItems="stretch"
+              sx={{ alignItems: "stretch", gap: 4 }}
             >
               <Paper
                 elevation={0}
