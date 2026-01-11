@@ -329,10 +329,9 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                             />
                           ))}
                         </Pie>
-
                         <ReTooltip
-                          formatter={(value, name, props) => {
-                            const p = props?.payload?.percent ?? 0;
+                          formatter={(value, name, tooltipItem) => {
+                            const p = tooltipItem?.payload?.percent ?? 0;
                             return [`${value} שאלות (${Math.round(p)}%)`, name];
                           }}
                           contentStyle={{
@@ -459,8 +458,8 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                       tickMargin={10}
                     />
                     <ReTooltip
-                      formatter={(value, _name, props) => {
-                        const p = props?.payload?.percent ?? 0;
+                      formatter={(value, _name, tooltipItem) => {
+                        const p = tooltipItem?.payload?.percent ?? 0;
                         return [`${value} שאלות (${Math.round(p)}%)`, "נענו"];
                       }}
                       contentStyle={{
@@ -468,6 +467,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                         border: `1px solid ${THEME.border}`,
                       }}
                     />
+
                     <Bar dataKey="count" fill={THEME.primary}>
                       <LabelList
                         dataKey="percent"
@@ -524,8 +524,8 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                       tickMargin={10}
                     />
                     <ReTooltip
-                      formatter={(value, _name, props) => {
-                        const sp = props?.payload?.scorePercent ?? 0;
+                      formatter={(value, _name, tooltipItem) => {
+                        const sp = tooltipItem?.payload?.scorePercent ?? 0;
                         return [
                           `${value} / ${scoreScaleMax} (${Math.round(sp)}%)`,
                           "ציון משוקלל",
