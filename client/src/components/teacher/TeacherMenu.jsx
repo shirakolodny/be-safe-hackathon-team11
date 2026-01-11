@@ -1,42 +1,53 @@
-import PropTypes from 'prop-types'; 
+import PropTypes from "prop-types";
 // MUI Imports
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 // Icons
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 
 const TeacherMenu = ({ onNavigate }) => {
-  
   // A helper function to create the card style
   const cardStyle = {
     p: 4,
-    width: { xs: '100%', sm: 250 }, // Responsive width
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    width: { xs: "100%", sm: 250 },
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     gap: 2,
-    transition: '0.3s',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-      boxShadow: 6,
-      border: '1px solid #3498db'
-    }
+    borderRadius: 2,
+    transition: "all 0.25s ease",
+
+    // מסגרת רגילה
+    border: "1px solid transparent",
+
+    // hover
+    "&:hover": {
+      transform: "translateY(-5px)",
+      boxShadow: "0 8px 24px rgba(46,110,101,0.25)",
+      borderColor: "#2E6E65",
+    },
+
+    // ✅ focus (במקום הכחול)
+    "&:focus-visible": {
+      outline: "none",
+      borderColor: "#2E6E65",
+      boxShadow: "0 0 0 3px rgba(46,110,101,0.35)",
+    },
   };
 
   return (
-    <Stack 
-      direction={{ xs: 'column', sm: 'row' }} 
-      spacing={4} 
-      justifyContent="center" 
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      spacing={2}
+      justifyContent="space-around"
       alignItems="center"
     >
-      
       {/* Option 1: Create New Game */}
-      <Paper elevation={3} sx={cardStyle} onClick={() => onNavigate('create')}>
-        <AddCircleOutlineIcon sx={{ fontSize: 60, color: '#3498db' }} />
+      <Paper elevation={3} sx={cardStyle} onClick={() => onNavigate("create")}>
+        <AddCircleOutlineIcon sx={{ fontSize: 60, color: "#2E6E65" }} />
         <Typography variant="h6" fontWeight="bold">
           פתיחת משחק חדש
         </Typography>
@@ -46,8 +57,8 @@ const TeacherMenu = ({ onNavigate }) => {
       </Paper>
 
       {/* Option 2: View Stats */}
-      <Paper elevation={3} sx={cardStyle} onClick={() => onNavigate('stats')}>
-        <AssessmentIcon sx={{ fontSize: 60, color: '#9b59b6' }} />
+      <Paper elevation={3} sx={cardStyle} onClick={() => onNavigate("stats")}>
+        <AssessmentIcon sx={{ fontSize: 60, color: "#2E6E65" }} />
         <Typography variant="h6" fontWeight="bold">
           כניסה למשחק קיים
         </Typography>
@@ -55,7 +66,6 @@ const TeacherMenu = ({ onNavigate }) => {
           צפייה בסטטיסטיקות של משחק פעיל
         </Typography>
       </Paper>
-
     </Stack>
   );
 };
