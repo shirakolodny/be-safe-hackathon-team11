@@ -73,11 +73,11 @@ const StudentLobby = ({ onStart }) => {
       <Box sx={{ marginTop: 0, marginBottom: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
         {/* Icon & Title */}
-        <Box sx={{ m: 1, bgcolor: 'secondary.main', p: 1, borderRadius: '50%', color: 'white' }}>
-            <SchoolIcon fontSize="medium" />
+        <Box sx={{ m: 1, bgcolor: 'secondary.main', p: 1, borderRadius: '50%', color: 'white', backgroundColor:"#2B3752" }}>
+            <SchoolIcon fontSize="medium"   sx={{ color:"#F4F7ED", backgroundColor:"#2B3752"  }}/>
         </Box>
         
-        <Typography component="h1" variant="h5" sx={{ mb: 3, fontFamily: 'Rubik, sans-serif' }}>
+        <Typography component="h1" variant="h5" sx={{ mb: 3, fontFamily: 'Rubik, sans-serif', color:"#2B3752"}}>
           כניסה למשחק
         </Typography>
 
@@ -85,31 +85,98 @@ const StudentLobby = ({ onStart }) => {
         <Paper elevation={3} sx={{ p: 3, width: '80%', borderRadius: 2 }}>
           <Box component="form" noValidate sx={{ mt: 1 }}>
             
-            <TextField
-              margin="dense"
-              size="small"
-              required
-              fullWidth
-              label="קוד משחק"
-              value={gameCode}
-              onChange={(e) => setGameCode(e.target.value)}
-              dir="rtl" 
-              disabled={loading}
-              InputLabelProps={{ style: { fontFamily: 'Rubik, sans-serif' } }} 
-            />
+         <TextField
+  margin="dense"
+  size="small"
+  required
+  fullWidth
+  label="קוד משחק"
+  value={gameCode}
+  onChange={(e) => setGameCode(e.target.value)}
+  dir="rtl"
+  disabled={loading}
+  InputLabelProps={{ style: { fontFamily: 'Rubik, sans-serif' } }}
+  sx={{
+    // טקסט רגיל (לא בפוקוס)
+    '& .MuiInputBase-input': {
+      color: '#000',
+      fontFamily: 'Rubik, sans-serif',
+    },
 
-            <TextField
-              margin="dense"
-              size="small"
-              required
-              fullWidth
-              label="כינוי"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              dir="rtl"
-              disabled={loading}
-              InputLabelProps={{ style: { fontFamily: 'Rubik, sans-serif' } }}
-            />
+    // טקסט בפוקוס בלבד
+    '& .MuiInputBase-input:focus': {
+      color: '#2E6E65',
+    },
+
+    // label רגיל
+    '& .MuiInputLabel-root': {
+      color: '#9e9e9e',
+      fontFamily: 'Rubik, sans-serif',
+    },
+
+    // label בפוקוס
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#2E6E65',
+    },
+
+    // מסגרת רגילה
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#9e9e9e',
+    },
+
+    // מסגרת בפוקוס בלבד
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#2E6E65',
+    },
+  }}
+/>
+
+<TextField
+  margin="dense"
+  size="small"
+  required
+  fullWidth
+  label="כינוי"
+  value={username}
+  onChange={(e) => setUsername(e.target.value)}
+  dir="rtl"
+  disabled={loading}
+  InputLabelProps={{ style: { fontFamily: 'Rubik, sans-serif' } }}
+  sx={{
+    // טקסט רגיל
+    '& .MuiInputBase-input': {
+      color: '#000',
+      fontFamily: 'Rubik, sans-serif',
+    },
+
+    // טקסט בפוקוס בלבד
+    '& .MuiInputBase-input:focus': {
+      color: '#2E6E65',
+    },
+
+    // label רגיל
+    '& .MuiInputLabel-root': {
+      color: '#9e9e9e',
+      fontFamily: 'Rubik, sans-serif',
+    },
+
+    // label בפוקוס
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#2E6E65',
+    },
+
+    // מסגרת רגילה
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#9e9e9e',
+    },
+
+    // מסגרת בפוקוס בלבד
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#2E6E65',
+    },
+  }}
+/>
+
 
             {/* Error Message Display */}
             {error && (
@@ -125,9 +192,9 @@ const StudentLobby = ({ onStart }) => {
               color="secondary"
               onClick={handleStart}
               disabled={loading}
-              sx={{ mt: 2, mb: 1, py: 1, fontSize: '1.1rem', fontWeight: 'bold', fontFamily: 'Rubik, sans-serif' }}
+              sx={{ mt: 2, mb: 1, py: 1, fontSize: '1.1rem', fontWeight: 'bold', fontFamily: 'Rubik, sans-serif', color:"#F4F7ED",backgroundColor:"#2E6E65"}}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'בואו נתחיל!'}
+              {loading ? <CircularProgress size={24} color="#2E6E65" /> : 'בואו נתחיל!'}
             </Button>
 
           </Box>

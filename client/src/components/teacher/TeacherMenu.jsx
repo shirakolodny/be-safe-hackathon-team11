@@ -16,7 +16,7 @@ const TeacherMenu = ({ onNavigate }) => {
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: "center",
     gap: 2,
     transition: '0.3s',
     '&:hover': {
@@ -28,16 +28,16 @@ const TeacherMenu = ({ onNavigate }) => {
 
   return (
     <Stack 
-      direction={{ xs: 'column', sm: 'row' }} 
-      spacing={4} 
-      justifyContent="center" 
-      alignItems="center"
+     direction={{ xs: 'column', sm: 'row' }} 
+     spacing={2} 
+     justifyContent="space-around" 
+     alignItems="center"
     >
       
       {/* Option 1: Create New Game */}
       <Paper elevation={3} sx={cardStyle} onClick={() => onNavigate('create')}>
-        <AddCircleOutlineIcon sx={{ fontSize: 60, color: '#3498db' }} />
-        <Typography variant="h6" fontWeight="bold">
+        <AddCircleOutlineIcon sx={{ fontSize: 60, color: '#2E6E65' }} />
+        <Typography variant="h6" fontWeight="bold" >
           פתיחת משחק חדש
         </Typography>
         <Typography variant="body2" color="text.secondary" align="center">
@@ -47,7 +47,7 @@ const TeacherMenu = ({ onNavigate }) => {
 
       {/* Option 2: View Stats */}
       <Paper elevation={3} sx={cardStyle} onClick={() => onNavigate('stats')}>
-        <AssessmentIcon sx={{ fontSize: 60, color: '#9b59b6' }} />
+        <AssessmentIcon sx={{ fontSize: 60, color: '#2E6E65' }} />
         <Typography variant="h6" fontWeight="bold">
           כניסה למשחק קיים
         </Typography>
