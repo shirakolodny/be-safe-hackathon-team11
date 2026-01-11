@@ -29,7 +29,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
   useEffect(() => {
     const startGame = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/games/${gameCode}/start?username=${studentName}`);
+        const res = await fetch(`http://localhost:5001/games/${gameCode}/start?username=${studentName}`);
         if (!res.ok) throw new Error("Failed to start game");
         
         const data = await res.json();
@@ -61,7 +61,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
     
     setLoading(true);
     try {
-        const res = await fetch(`http://localhost:5000/games/${gameCode}/answer`, {
+        const res = await fetch(`http://localhost:5001/games/${gameCode}/answer`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -32,7 +32,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/admin/game/${gameCode}`);
+        const res = await fetch(`http://localhost:5001/admin/game/${gameCode}`);
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
         setGameData(data);
@@ -44,7 +44,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     };
 
     fetchGame();
-    const intervalId = setInterval(fetchGame, 5000);
+    const intervalId = setInterval(fetchGame, 5001);
     return () => clearInterval(intervalId);
   }, [gameCode]);
 

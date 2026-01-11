@@ -28,7 +28,7 @@ const StudentLobby = ({ onStart }) => {
 
     try {
       // Step 1: Attempt to join/reserve the username on the server
-      const res = await fetch(`http://localhost:5000/games/${gameCode.trim()}/join`, {
+      const res = await fetch(`http://localhost:5001/games/${gameCode.trim()}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.trim() })
