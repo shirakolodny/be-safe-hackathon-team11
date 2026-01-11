@@ -14,8 +14,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Button from "../common/Button";
 
 const COLORS = {
-  title: "#2B3752", // כחול כהה (כותרות + פס אנכי)
-  primary: "#2E6E65", // ירוק (נושא + progress)
+  title: "#2B3752",
+  primary: "#2E6E65",
   primaryHover: "#265751",
   softBg: "#E8F6F3",
   border: "rgba(43, 55, 82, 0.18)",
@@ -35,7 +35,9 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
     const startGame = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5001/games/${gameCode}/start?username=${studentName}`
+          `http://localhost:5001/games/${gameCode}/start?username=${encodeURIComponent(
+            studentName
+          )}`
         );
         if (!res.ok) throw new Error("Failed to start game");
 
@@ -63,7 +65,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
   }, [gameCode, studentName, onGameFinished]);
 
   const handleSubmit = async () => {
-    if (!answerText.trim()) return;
+    if (!answerText.trim() || !currentQuestion) return;
 
     setLoading(true);
     try {
@@ -75,10 +77,12 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
           body: JSON.stringify({
             username: studentName,
             questionId: currentQuestion.id,
-            answerText: answerText,
+            answerText,
           }),
         }
       );
+
+      if (!res.ok) throw new Error("Submit failed");
 
       const data = await res.json();
 
@@ -96,25 +100,30 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
   };
 
   const handleContinue = () => {
+    if (!feedbackData) return;
+
     if (feedbackData.finished) {
       onGameFinished();
-    } else {
-      setQuestionCount((prev) => prev + 1);
-      setCurrentQuestion(feedbackData.nextQ);
-      setAnswerText("");
-      setFeedbackData(null);
+      return;
     }
+
+    setQuestionCount((prev) => prev + 1);
+    setCurrentQuestion(feedbackData.nextQ);
+    setAnswerText("");
+    setFeedbackData(null);
   };
 
-  if (initializing)
+  if (initializing) {
     return <CircularProgress sx={{ display: "block", mx: "auto", mt: 10 }} />;
+  }
 
-  if (!currentQuestion && !feedbackData)
+  if (!currentQuestion && !feedbackData) {
     return (
       <Typography align="center" sx={{ mt: 10 }}>
         טוען נתונים...
       </Typography>
     );
+  }
 
   const progressValue = Math.min(100, (questionCount / TOTAL_QUESTIONS) * 100);
 
@@ -125,7 +134,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
         display: "flex",
         justifyContent: "center",
         px: { xs: 1.5, sm: 2 },
-        pt: 1, // ✅ לא דוחף למטה (כדי שלא יצטרכו לגלול)
+        pt: 1,
         pb: 2,
       }}
     >
@@ -135,14 +144,9 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
         sx={{
           width: "100%",
           maxWidth: 700,
-
-          // ✅ גובה שמתאים למסך עם header
-          // אם המסך קטן מדי, יהיה גלילה בתוך הקופסה ולא בעמוד
           minHeight: "calc(100vh - 180px)",
           maxHeight: "calc(100vh - 180px)",
-
           overflow: "auto",
-
           p: { xs: 2.5, sm: 4 },
           borderRadius: 3,
           border: `1.5px solid ${COLORS.border}`,
@@ -175,7 +179,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
               borderRadius: 999,
               backgroundColor: "rgba(46, 110, 101, 0.15)",
               "& .MuiLinearProgress-bar": {
-                backgroundColor: COLORS.primary, // ✅ ירוק
+                backgroundColor: COLORS.primary,
                 borderRadius: 999,
               },
             }}
@@ -186,32 +190,25 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
         {!feedbackData && (
           <Fade in={!feedbackData}>
             <Box>
-              {/* Topic chip */}
               <Chip
                 label={currentQuestion.category}
                 variant="outlined"
                 sx={{
                   mb: 2,
                   fontWeight: 800,
-                  color: COLORS.primary, // ✅ ירוק
+                  color: COLORS.primary,
                   borderColor: "rgba(46, 110, 101, 0.55)",
                   backgroundColor: "rgba(46, 110, 101, 0.08)",
                 }}
               />
 
-              {/* Title */}
               <Typography
                 variant="h5"
-                sx={{
-                  fontWeight: 900,
-                  mb: 2,
-                  color: COLORS.title, // ✅ כחול כהה
-                }}
+                sx={{ fontWeight: 900, mb: 2, color: COLORS.title }}
               >
                 {currentQuestion.title}
               </Typography>
 
-              {/* Description with right border (vertical bar) */}
               <Paper
                 variant="outlined"
                 sx={{
@@ -220,7 +217,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                   borderRadius: 2,
                   backgroundColor: "#FAFBFC",
                   border: `1px solid ${COLORS.border}`,
-                  borderRight: `5px solid ${COLORS.title}`, // ✅ פס אנכי כחול כהה
+                  borderRight: `5px solid ${COLORS.title}`,
                 }}
               >
                 <Typography
@@ -235,19 +232,13 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 </Typography>
               </Paper>
 
-              {/* Question text */}
               <Typography
                 variant="h6"
-                sx={{
-                  fontWeight: 900,
-                  color: COLORS.title, // ✅ כמו שביקשת (לא אדום)
-                  mb: 2,
-                }}
+                sx={{ fontWeight: 900, color: COLORS.title, mb: 2 }}
               >
                 {currentQuestion.question}
               </Typography>
 
-              {/* Answer input */}
               <TextField
                 label="מה דעתך?"
                 multiline
@@ -319,7 +310,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
               <Typography
                 variant="h4"
                 sx={{
-                  color: COLORS.primary, // ✅ ירוק
+                  color: COLORS.primary,
                   fontWeight: 900,
                   mb: 2.5,
                   textAlign: "center",
