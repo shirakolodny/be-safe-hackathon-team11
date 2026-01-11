@@ -708,6 +708,335 @@
 
 
 
+// import { useState, useEffect, useMemo } from "react";
+// import PropTypes from "prop-types";
+
+// // Material UI
+// import Paper from "@mui/material/Paper";
+// import Typography from "@mui/material/Typography";
+// import Box from "@mui/material/Box";
+// import CircularProgress from "@mui/material/CircularProgress";
+// import Table from "@mui/material/Table";
+// import TableBody from "@mui/material/TableBody";
+// import TableCell from "@mui/material/TableCell";
+// import TableContainer from "@mui/material/TableContainer";
+// import TableHead from "@mui/material/TableHead";
+// import TableRow from "@mui/material/TableRow";
+// import Chip from "@mui/material/Chip";
+// import Stack from "@mui/material/Stack";
+// import IconButton from "@mui/material/IconButton";
+// import Snackbar from "@mui/material/Snackbar";
+// import Tooltip from "@mui/material/Tooltip";
+
+// // Icons
+// import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+
+// // Project
+// import Button from "../common/Button";
+
+// // Translate topic names to Hebrew
+// const TOPIC_LABELS = {
+//   Cyberbullying: "בריונות ברשת",
+//   Privacy: "פרטיות",
+//   Fakenews: "פייק ניוז",
+//   Shaming: "שיימינג",
+// };
+
+// const TeacherGameLobby = ({ gameCode, onBack }) => {
+//   const [gameData, setGameData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [copied, setCopied] = useState(false);
+
+//   const API_BASE =
+//     (import.meta?.env?.VITE_SERVER_API_URL || "http://localhost:5000").replace(
+//       /\/$/,
+//       ""
+//     );
+
+//   const topicDisplay = useMemo(() => {
+//     return gameData?.topics?.map((t) => TOPIC_LABELS[t] || t).join(", ");
+//   }, [gameData]);
+
+//   useEffect(() => {
+//     const fetchGame = async () => {
+//       try {
+//         const res = await fetch(`${API_BASE}/admin/game/${gameCode}`);
+//         if (!res.ok) throw new Error("Game not found");
+//         const data = await res.json();
+//         setGameData(data);
+//       } catch (err) {
+//         console.error("Error fetching game data:", err);
+//         setGameData(null);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchGame();
+//     const intervalId = setInterval(fetchGame, 5000);
+//     return () => clearInterval(intervalId);
+//   }, [API_BASE, gameCode]);
+
+//   // 🔄 טעינה
+//   if (loading) {
+//     return (
+//       <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />
+//     );
+//   }
+
+//   if (!gameData) {
+//     return (
+//       <Paper
+//         elevation={3}
+//         sx={{
+//           p: 4,
+//           maxWidth: 600,
+//           mx: "auto",
+//           mt: 4,
+//           textAlign: "center",
+//         }}
+//         dir="rtl"
+//       >
+//         <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+//           קוד משחק שגוי
+//         </Typography>
+
+//         <Typography
+//           variant="body2"
+//           color="text.secondary"
+//           sx={{ mb: 3 }}
+//         >
+//           לא נמצא משחק עם הקוד שהוזן. ניתן לחזור ולנסות שוב.
+//         </Typography>
+
+//         <Button variant="secondary" onClick={onBack}>
+//           חזרה לניהול המשחקים
+//         </Button>
+//       </Paper>
+//     );
+//   }
+
+//   const finishedCount = gameData.students
+//     ? gameData.students.filter((s) => s.finished).length
+//     : 0;
+
+//   const totalStudents = gameData.students
+//     ? gameData.students.length
+//     : 0;
+
+//   const gameTopics = gameData.topics || [];
+
+//   const calculateLiveAverage = (student, topics) => {
+//     let totalSum = 0;
+//     let topicCount = 0;
+//     const scores = student.scoresByTopic || {};
+
+//     topics.forEach((topic) => {
+//       const stats = scores[topic];
+//       if (stats && stats.count > 0) {
+//         totalSum += stats.total / stats.count;
+//         topicCount++;
+//       }
+//     });
+
+//     if (topicCount === 0) return "-";
+//     return (totalSum / topicCount).toFixed(1);
+//   };
+
+//   const handleCopyCode = async () => {
+//     const code = gameData.gameCode;
+//     try {
+//       await navigator.clipboard.writeText(code);
+//       setCopied(true);
+//     } catch {
+//       try {
+//         const el = document.createElement("textarea");
+//         el.value = code;
+//         document.body.appendChild(el);
+//         el.select();
+//         document.execCommand("copy");
+//         document.body.removeChild(el);
+//         setCopied(true);
+//       } catch (err) {
+//         console.error("Copy failed:", err);
+//       }
+//     }
+//   };
+
+//   //  לובי תקין
+//   return (
+//     <Paper
+//       elevation={3}
+//       sx={{
+//         p: 4,
+//         maxWidth: 1000,
+//         width: "100%",
+//         mx: "auto",
+//         textAlign: "center",
+//       }}
+//       dir="rtl"
+//     >
+//       <Typography variant="h5" sx={{ mb: 1, fontWeight: "bold" }}>
+//         משחק בנושא: {topicDisplay}
+//       </Typography>
+
+//       <Box
+//         sx={{
+//           my: 3,
+//           p: 2,
+//           bgcolor: "#e8f6f3",
+//           borderRadius: 2,
+//           border: "2px dashed #1abc9c",
+//           display: "inline-flex",
+//           alignItems: "center",
+//           gap: 1,
+//         }}
+//       >
+//         <Typography variant="h6" color="text.secondary">
+//           קוד משחק:
+//         </Typography>
+//         <Typography
+//           variant="h3"
+//           sx={{ fontWeight: "bold", color: "#16a085", letterSpacing: 4 }}
+//         >
+//           {gameData.gameCode}
+//         </Typography>
+
+//         <Tooltip title="העתק קוד">
+//           <IconButton onClick={handleCopyCode}>
+//             <ContentCopyIcon />
+//           </IconButton>
+//         </Tooltip>
+//       </Box>
+
+//       <Box
+//         sx={{ mb: 3, display: "flex", justifyContent: "center", gap: 4 }}
+//       >
+//         <Typography variant="h6">
+//           התחברו: <strong>{totalStudents}</strong>
+//         </Typography>
+//         <Typography variant="h6">
+//           סיימו: <strong>{finishedCount}</strong>
+//         </Typography>
+//       </Box>
+
+//       <Stack
+//         direction={{ xs: "column", sm: "row" }}
+//         spacing={2}
+//         justifyContent="center"
+//         sx={{ mb: 3 }}
+//       >
+//         <Button variant="secondary" onClick={onBack}>
+//           חזרה לניהול המשחקים
+//         </Button>
+//       </Stack>
+
+//       <TableContainer component={Paper} elevation={1}>
+//         <Table stickyHeader dir="rtl">
+//           <TableHead>
+//             <TableRow>
+//               <TableCell sx={{ fontWeight: "bold" }}>
+//                 שם התלמיד/ה
+//               </TableCell>
+//               {gameTopics.map((topic) => (
+//                 <TableCell
+//                   key={topic}
+//                   align="center"
+//                   sx={{ fontWeight: "bold" }}
+//                 >
+//                   {TOPIC_LABELS[topic] || topic}
+//                 </TableCell>
+//               ))}
+//               <TableCell align="center" sx={{ fontWeight: "bold" }}>
+//                 ציון משוקלל
+//               </TableCell>
+//               <TableCell align="center" sx={{ fontWeight: "bold" }}>
+//                 סטטוס
+//               </TableCell>
+//             </TableRow>
+//           </TableHead>
+
+//           <TableBody>
+//             {gameData.students?.length ? (
+//               gameData.students.map((student, idx) => (
+//                 <TableRow key={idx}>
+//                   <TableCell>{student.username}</TableCell>
+
+//                   {gameTopics.map((topic) => {
+//                     const stats = student.scoresByTopic?.[topic];
+//                     const score =
+//                       stats && stats.count > 0
+//                         ? (stats.total / stats.count).toFixed(1)
+//                         : "-";
+//                     return (
+//                       <TableCell key={topic} align="center">
+//                         {score}
+//                       </TableCell>
+//                     );
+//                   })}
+
+//                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
+//                     {calculateLiveAverage(student, gameTopics)}
+//                   </TableCell>
+
+//                   <TableCell align="center">
+//                     {student.finished ? (
+//                       <Chip
+//                         label="סיימ/ה"
+//                         color="success"
+//                         size="small"
+//                       />
+//                     ) : (
+//                       <Chip
+//                         label="משחק/ת..."
+//                         color="warning"
+//                         size="small"
+//                         variant="outlined"
+//                       />
+//                     )}
+//                   </TableCell>
+//                 </TableRow>
+//               ))
+//             ) : (
+//               <TableRow>
+//                 <TableCell
+//                   colSpan={4 + gameTopics.length}
+//                   align="center"
+//                 >
+//                   אין תלמידים מחוברים
+//                 </TableCell>
+//               </TableRow>
+//             )}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+
+//       <Snackbar
+//         open={copied}
+//         autoHideDuration={2000}
+//         onClose={() => setCopied(false)}
+//         message="קוד המשחק הועתק!"
+//       />
+//     </Paper>
+//   );
+// };
+
+// TeacherGameLobby.propTypes = {
+//   gameCode: PropTypes.string.isRequired,
+//   onBack: PropTypes.func.isRequired,
+// };
+
+// export default TeacherGameLobby;
+
+
+
+// תיקון באג 2 סטט
+
+
+
+
+
+
 import { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 
@@ -733,6 +1062,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 // Project
 import Button from "../common/Button";
+import GameStats from "./GameStats";
 
 // Translate topic names to Hebrew
 const TOPIC_LABELS = {
@@ -745,6 +1075,7 @@ const TOPIC_LABELS = {
 const TeacherGameLobby = ({ gameCode, onBack }) => {
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState("lobby"); // lobby | stats
   const [copied, setCopied] = useState(false);
 
   const API_BASE =
@@ -777,35 +1108,23 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     return () => clearInterval(intervalId);
   }, [API_BASE, gameCode]);
 
-  // 🔄 טעינה
   if (loading) {
-    return (
-      <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />
-    );
+    return <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />;
   }
 
+  // ✅ לא נתקעים על "קוד משחק שגוי" — יש כפתור חזרה
   if (!gameData) {
     return (
       <Paper
         elevation={3}
-        sx={{
-          p: 4,
-          maxWidth: 600,
-          mx: "auto",
-          mt: 4,
-          textAlign: "center",
-        }}
+        sx={{ p: 4, maxWidth: 600, mx: "auto", mt: 4, textAlign: "center" }}
         dir="rtl"
       >
         <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
           קוד משחק שגוי
         </Typography>
 
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mb: 3 }}
-        >
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           לא נמצא משחק עם הקוד שהוזן. ניתן לחזור ולנסות שוב.
         </Typography>
 
@@ -820,10 +1139,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     ? gameData.students.filter((s) => s.finished).length
     : 0;
 
-  const totalStudents = gameData.students
-    ? gameData.students.length
-    : 0;
-
+  const totalStudents = gameData.students ? gameData.students.length : 0;
   const gameTopics = gameData.topics || [];
 
   const calculateLiveAverage = (student, topics) => {
@@ -863,17 +1179,22 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     }
   };
 
-  //  לובי תקין
+  // ✅ Stats page
+  if (view === "stats") {
+    return (
+      <GameStats
+        gameData={gameData}
+        topicLabels={TOPIC_LABELS}
+        onBackToLobby={() => setView("lobby")}
+      />
+    );
+  }
+
+  // ✅ Lobby page
   return (
     <Paper
       elevation={3}
-      sx={{
-        p: 4,
-        maxWidth: 1000,
-        width: "100%",
-        mx: "auto",
-        textAlign: "center",
-      }}
+      sx={{ p: 4, maxWidth: 1000, width: "100%", mx: "auto", textAlign: "center" }}
       dir="rtl"
     >
       <Typography variant="h5" sx={{ mb: 1, fontWeight: "bold" }}>
@@ -909,9 +1230,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
         </Tooltip>
       </Box>
 
-      <Box
-        sx={{ mb: 3, display: "flex", justifyContent: "center", gap: 4 }}
-      >
+      <Box sx={{ mb: 3, display: "flex", justifyContent: "center", gap: 4 }}>
         <Typography variant="h6">
           התחברו: <strong>{totalStudents}</strong>
         </Typography>
@@ -926,6 +1245,10 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
         justifyContent="center"
         sx={{ mb: 3 }}
       >
+        <Button variant="primary" onClick={() => setView("stats")}>
+          הצג סטטיסטיקות
+        </Button>
+
         <Button variant="secondary" onClick={onBack}>
           חזרה לניהול המשחקים
         </Button>
@@ -935,15 +1258,9 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
         <Table stickyHeader dir="rtl">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>
-                שם התלמיד/ה
-              </TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>שם התלמיד/ה</TableCell>
               {gameTopics.map((topic) => (
-                <TableCell
-                  key={topic}
-                  align="center"
-                  sx={{ fontWeight: "bold" }}
-                >
+                <TableCell key={topic} align="center" sx={{ fontWeight: "bold" }}>
                   {TOPIC_LABELS[topic] || topic}
                 </TableCell>
               ))}
@@ -981,11 +1298,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
 
                   <TableCell align="center">
                     {student.finished ? (
-                      <Chip
-                        label="סיימ/ה"
-                        color="success"
-                        size="small"
-                      />
+                      <Chip label="סיימ/ה" color="success" size="small" />
                     ) : (
                       <Chip
                         label="משחק/ת..."
@@ -999,10 +1312,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={4 + gameTopics.length}
-                  align="center"
-                >
+                <TableCell colSpan={4 + gameTopics.length} align="center">
                   אין תלמידים מחוברים
                 </TableCell>
               </TableRow>
