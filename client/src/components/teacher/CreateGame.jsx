@@ -18,7 +18,7 @@ const TOPICS = [
   { value: "Shaming", label: "שיימינג וחרם" },
 ];
 
-// צבעים אחידים לאפליקציה
+// Uniform application colors
 const COLORS = {
   title: "#2B3752",
   primary: "#2E6E65",
@@ -81,6 +81,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
         border: `1.5px solid ${COLORS.paperBorder}`,
         backgroundColor: "#fff",
         direction: "rtl",
+        fontFamily: "Rubik, sans-serif", // Default font for the paper
       }}
     >
       <Typography
@@ -103,6 +104,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
           color: COLORS.textMuted,
           textAlign: "right",
           lineHeight: 1.8,
+          fontFamily: "Rubik, sans-serif",
         }}
       >
         אפשר לבחור כמה נושאים. לאחר יצירת המשחק יופק קוד כניסה לתלמידים.
@@ -118,33 +120,35 @@ const CreateGame = ({ onBack, onGameCreated }) => {
         sx={{
           mb: 3,
 
-          // טקסט בתוך השדה (הבחירה)
+          // Text inside the field (selection)
           "& .MuiSelect-select": {
             color: COLORS.primary,
             fontWeight: 600,
+            fontFamily: "Rubik, sans-serif",
           },
 
-          // label ברירת מחדל (אפור)
+          // Default label (gray)
           "& .MuiInputLabel-root": {
             color: "#7b7b7b",
+            fontFamily: "Rubik, sans-serif",
           },
 
-          // label בפוקוס (ירוק)
+          // Focused label (green)
           "& .MuiInputLabel-root.Mui-focused": {
             color: COLORS.primary,
           },
 
-          // מסגרת רגילה
+          // Standard border
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "rgba(43, 55, 82, 0.25)",
           },
 
-          // hover על השדה
+          // Hover over field
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: COLORS.primary,
           },
 
-          // מסגרת בפוקוס
+          // Focused border
           "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
             {
               borderColor: COLORS.primary,
@@ -160,6 +164,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
                 mt: 1,
                 "& .MuiMenuItem-root": {
                   color: COLORS.title,
+                  fontFamily: "Rubik, sans-serif", // Font for menu items
                 },
                 "& .MuiMenuItem-root:hover": {
                   backgroundColor: "rgba(46,110,101,0.08)",
@@ -187,6 +192,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
                       color: "#fff",
                       fontWeight: 700,
                       borderRadius: 2,
+                      fontFamily: "Rubik, sans-serif", // Font for chips
                     }}
                   />
                 );
@@ -212,14 +218,29 @@ const CreateGame = ({ onBack, onGameCreated }) => {
           textAlign: "right",
         }}
       >
-        <Typography sx={{ fontWeight: 800, color: COLORS.title, mb: 0.5 }}>
+        <Typography
+          sx={{
+            fontWeight: 800,
+            color: COLORS.title,
+            mb: 0.5,
+            fontFamily: "Rubik, sans-serif",
+          }}
+        >
           נבחרו:
         </Typography>
 
         {selectedTopics.length === 0 ? (
-          <Typography color="text.secondary">עדיין לא נבחרו נושאים.</Typography>
+          <Typography color="text.secondary" sx={{ fontFamily: "Rubik, sans-serif" }}>
+            עדיין לא נבחרו נושאים.
+          </Typography>
         ) : (
-          <Typography sx={{ color: COLORS.primary, fontWeight: 700 }}>
+          <Typography
+            sx={{
+              color: COLORS.primary,
+              fontWeight: 700,
+              fontFamily: "Rubik, sans-serif",
+            }}
+          >
             {selectedTopics
               .map((v) => TOPICS.find((t) => t.value === v)?.label || v)
               .join(" • ")}
@@ -236,6 +257,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
             border: `2px solid ${COLORS.primary}`,
             backgroundColor: "transparent",
             fontWeight: "bold",
+            fontFamily: "Rubik, sans-serif", // Font for button
             px: 4,
             py: 1.2,
             "&:hover": {
@@ -255,6 +277,7 @@ const CreateGame = ({ onBack, onGameCreated }) => {
             backgroundColor: COLORS.primary,
             color: "#fff",
             fontWeight: "bold",
+            fontFamily: "Rubik, sans-serif", // Font for button
             px: 4,
             py: 1.2,
             "&:hover": {

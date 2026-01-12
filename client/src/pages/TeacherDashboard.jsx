@@ -6,10 +6,8 @@ import Typography from "@mui/material/Typography";
 // --- Import Components ---
 import TeacherMenu from "../components/teacher/TeacherMenu";
 import CreateGame from "../components/teacher/CreateGame";
-
-// Fix: Import the correct components based on our renaming
-import TeacherJoinGame from "../components/teacher/TeacherJoinGame"; // The small form to enter a code
-import TeacherGameLobby from "../components/teacher/TeacherGameLobby"; // The big dashboard with stats
+import TeacherJoinGame from "../components/teacher/TeacherJoinGame"; // Small form to enter a code
+import TeacherGameLobby from "../components/teacher/TeacherGameLobby"; // Dashboard with stats
 
 const TeacherDashboard = () => {
   // State to manage the current view. Options: 'menu', 'create', 'enter-code', 'lobby'
@@ -27,13 +25,23 @@ const TeacherDashboard = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <Container 
+      maxWidth="md" 
+      sx={{ 
+        py: 4,
+        fontFamily: "Rubik, sans-serif" // Apply uniform font
+      }}
+    >
       {/* Page Header */}
       <Box sx={{ mb: 4, borderBottom: "2px solid #2B3752", pb: 2 }}>
         <Typography
           variant="h5"
           align="center"
-          sx={{ color: "#2B3752", fontWeight: "bold" }}
+          sx={{ 
+            color: "#2B3752", 
+            fontWeight: "bold",
+            fontFamily: "Rubik, sans-serif" // Apply uniform font to title
+          }}
         >
           ניהול המשחקים (מורים)
         </Typography>
@@ -78,18 +86,3 @@ const TeacherDashboard = () => {
 };
 
 export default TeacherDashboard;
-
-{
-  /* <Box sx={styles.appWrapper}>
-  <Header />
-  <Routes>
-    <Route path="/" element={<HomePage />} />
-    <Route path="/login" element={<LoginPage />} />
-  </Routes>
-  <Box component="footer" sx={styles.footer}>
-    <Typography variant="body2" color="text.secondary">
-      © 2025 QueenB Hackathon – Team 11
-    // </Typography>
-  </Box>
-</Box>; */
-}

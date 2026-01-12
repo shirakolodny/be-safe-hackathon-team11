@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // ייבוא הניווט
+import { useNavigate } from "react-router-dom"; // Import navigation hook
 import { Box, Typography, Button } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import SecurityIcon from "@mui/icons-material/Security";
 import SchoolIcon from "@mui/icons-material/School";
+import PropTypes from 'prop-types';
 
 const heroImage = "/images/besafepic.png";
 
@@ -12,24 +13,32 @@ function Feature({ Icon, title, text }) {
   return (
     <Box sx={{ flex: 1, textAlign: "center", color: "#0E2A2A", px: 1 }}>
       <Icon sx={{ fontSize: 42, mb: 1.5 }} />
-      <Typography sx={{ fontWeight: 800, fontSize: "1.1rem", mb: 0.5 }}>
+      <Typography sx={{ fontWeight: 800, fontSize: "1.1rem", mb: 0.5, fontFamily: "Rubik, sans-serif" }}>
         {title}
       </Typography>
-      <Typography sx={{ fontSize: "0.95rem", lineHeight: 1.6 }}>
+      <Typography sx={{ fontSize: "0.95rem", lineHeight: 1.6, fontFamily: "Rubik, sans-serif" }}>
         {text}
       </Typography>
     </Box>
   );
 }
 
+// --- Prop Types Validation ---
+Feature.propTypes = {
+  Icon: PropTypes.elementType.isRequired, // Validates that Icon is a React component
+  title: PropTypes.string.isRequired,     // Validates that title is a string
+  text: PropTypes.string.isRequired,      // Validates that text is a string
+};
+
 export default function HomePage() {
-  const navigate = useNavigate(); // אתחול הניווט
+  const navigate = useNavigate(); // Initialize navigation
 
   useEffect(() => {
     const root = document.getElementById("root");
     const html = document.documentElement;
     const body = document.body;
 
+    // Lock scroll for the homepage layout to ensure full screen fit
     if (root) {
       root.style.display = "flex";
       root.style.flexDirection = "column";
@@ -39,6 +48,7 @@ export default function HomePage() {
     html.style.overflow = "hidden";
     body.style.overflow = "hidden";
 
+    // Cleanup function: Reset styles when leaving the page
     return () => {
       if (root) {
         root.style.display = "";
@@ -59,6 +69,7 @@ export default function HomePage() {
         flexDirection: "column",
         backgroundColor: "#F4F7ED",
         overflow: "hidden",
+        fontFamily: "Rubik, sans-serif", // Set uniform font for the page
       }}
     >
       {/* HERO SECTION */}
@@ -80,7 +91,7 @@ export default function HomePage() {
             gap: 10,
           }}
         >
-          {/* תמונה בצד ימין - גדולה יותר (55%) */}
+          {/* Right side image - larger area (55%) */}
           <Box
             sx={{
               flex: "0 0 55%",
@@ -103,7 +114,7 @@ export default function HomePage() {
             />
           </Box>
 
-          {/* טקסט בצד שמאל */}
+          {/* Left side text area */}
           <Box
             sx={{
               flex: 1,
@@ -113,13 +124,14 @@ export default function HomePage() {
               py: 2,
             }}
           >
-            {/* כותרת - הוקטנה */}
+            {/* Title */}
             <Typography
               sx={{
                 fontWeight: 900,
                 fontSize: "clamp(1.8rem, 2.4vw, 2.8rem)",
                 lineHeight: 1.2,
                 color: "#0E2A2A",
+                fontFamily: "Rubik, sans-serif", // Apply Rubik font
               }}
             >
               המרחב הדיגיטלי שלכם
@@ -127,7 +139,7 @@ export default function HomePage() {
               בטוח, חכם ומבוסס חוויה
             </Typography>
 
-            {/* תיאור - הוגדל משמעותית */}
+            {/* Description */}
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <Typography
                 sx={{
@@ -135,6 +147,7 @@ export default function HomePage() {
                   lineHeight: 1.6,
                   fontWeight: 500,
                   color: "rgba(14, 42, 42, 0.9)",
+                  fontFamily: "Rubik, sans-serif", // Apply Rubik font
                 }}
               >
                 לומדים להתמודד עם סיטואציות אמיתיות ברשת – פרטיות, שיימינג, פייק
@@ -142,19 +155,20 @@ export default function HomePage() {
               </Typography>
             </Box>
 
-            {/* כפתור כניסה עם ניווט */}
+            {/* Login button with navigation */}
             <Box>
               <Button
                 variant="contained"
                 startIcon={<LoginIcon />}
-                onClick={() => navigate("/login")} // מעבר לדף לוגין
+                onClick={() => navigate("/login")}
                 sx={{
-                  backgroundColor: "#2B3752", // הצבע שציינת
+                  backgroundColor: "#2B3752",
                   px: 6,
                   py: 2,
                   borderRadius: 1.5,
                   fontWeight: 800,
                   fontSize: "1.2rem",
+                  fontFamily: "Rubik, sans-serif", // Apply Rubik font
                   boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                   "& .MuiButton-startIcon": { ml: 2, mr: 0 },
                   "&:hover": {

@@ -270,7 +270,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
               lineHeight: 1.8,
             }}
           >
-            שיקלול משוקלל לכל נושא (Σ total / Σ count) + שיקלול כולל לכל המשחק +
+            שיקלול משוקלל לכל נושא + שיקלול כולל לכל המשחק +
             התפלגות באחוזים.
           </Typography>
 
@@ -371,7 +371,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 color: THEME.title,
               }}
             >
-              התפלגות שאלות לפי נושא (Pie + אחוזים)
+              התפלגות שאלות לפי נושא
             </Typography>
 
             <Stack
@@ -527,7 +527,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 color: THEME.title,
               }}
             >
-              כמה שאלות נענו בכל נושא (Bar + אחוזים)
+              כמה שאלות נענו בכל נושא
             </Typography>
 
             <Paper
@@ -593,7 +593,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 color: THEME.title,
               }}
             >
-              ציון משוקלל לכל נושא (Σ total / Σ count)
+              ציון משוקלל לכל נושא
             </Typography>
 
             <Paper

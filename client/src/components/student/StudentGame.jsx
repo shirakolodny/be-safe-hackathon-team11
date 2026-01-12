@@ -132,7 +132,10 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
   // --- Render: Error/Empty State ---
   if (!currentQuestion && !feedbackData) {
     return (
-      <Typography align="center" sx={{ mt: 10 }}>
+      <Typography 
+        align="center" 
+        sx={{ mt: 10, fontFamily: "Rubik, sans-serif" }}
+      >
         Loading data...
       </Typography>
     );
@@ -163,6 +166,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
           borderRadius: 3,
           border: `1.5px solid ${COLORS.border}`,
           backgroundColor: "#fff",
+          fontFamily: "Rubik, sans-serif", // Apply uniform font to container
         }}
       >
         {/* HEADER: Question Count Only */}
@@ -172,7 +176,8 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 sx={{ 
                     fontWeight: 'bold', 
                     color: COLORS.title,
-                    textAlign: 'center' 
+                    textAlign: 'center',
+                    fontFamily: "Rubik, sans-serif"
                 }}
             >
                 שאלה {questionCount}
@@ -193,13 +198,19 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                   color: COLORS.primary,
                   borderColor: "rgba(46, 110, 101, 0.55)",
                   backgroundColor: "rgba(46, 110, 101, 0.08)",
+                  fontFamily: "Rubik, sans-serif",
                 }}
               />
 
               {/* Question Title */}
               <Typography
                 variant="h5"
-                sx={{ fontWeight: 900, mb: 2, color: COLORS.title }}
+                sx={{ 
+                    fontWeight: 900, 
+                    mb: 2, 
+                    color: COLORS.title,
+                    fontFamily: "Rubik, sans-serif",
+                }}
               >
                 {currentQuestion.title}
               </Typography>
@@ -222,6 +233,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                     fontSize: "1.05rem",
                     lineHeight: 1.8,
                     color: COLORS.title,
+                    fontFamily: "Rubik, sans-serif",
                   }}
                 >
                   {currentQuestion.description}
@@ -231,7 +243,12 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
               {/* The Question Itself */}
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 900, color: COLORS.title, mb: 2 }}
+                sx={{ 
+                    fontWeight: 900, 
+                    color: COLORS.title, 
+                    mb: 2,
+                    fontFamily: "Rubik, sans-serif",
+                }}
               >
                 {currentQuestion.question}
               </Typography>
@@ -246,8 +263,14 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 onChange={(e) => setAnswerText(e.target.value)}
                 disabled={loading}
                 placeholder="כתוב/כתבי את תשובתך כאן..."
+                // Apply font to label via InputLabelProps
+                InputLabelProps={{ style: { fontFamily: "Rubik, sans-serif" } }}
                 sx={{
                   mb: 2.5,
+                  // Apply font to input text
+                  "& .MuiInputBase-input": {
+                     fontFamily: "Rubik, sans-serif",
+                  },
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: COLORS.primary,
                     fontWeight: 700,
@@ -278,6 +301,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                   color: "#fff",
                   fontWeight: 800,
                   py: 1.25,
+                  fontFamily: "Rubik, sans-serif",
                   "&:hover": { backgroundColor: COLORS.primaryHover },
                 }}
               >
@@ -294,7 +318,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                   variant="caption"
                   align="center"
                   display="block"
-                  sx={{ mt: 1, color: "text.secondary" }}
+                  sx={{ mt: 1, color: "text.secondary", fontFamily: "Rubik, sans-serif" }}
                 >
                   מתבצע ניתוח של התשובה שלך...
                 </Typography>
@@ -314,6 +338,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                   fontWeight: 900,
                   mb: 2.5,
                   textAlign: "center",
+                  fontFamily: "Rubik, sans-serif",
                 }}
               >
                 משוב
@@ -338,6 +363,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                     textAlign: "center",
                     color: COLORS.title,
                     lineHeight: 1.8,
+                    fontFamily: "Rubik, sans-serif",
                   }}
                 >
                   {feedbackData.feedback}
@@ -355,6 +381,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                   color: "#fff",
                   fontWeight: 800,
                   py: 1.25,
+                  fontFamily: "Rubik, sans-serif",
                   "&:hover": { backgroundColor: COLORS.primaryHover },
                 }}
               >

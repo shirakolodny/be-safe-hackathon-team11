@@ -74,14 +74,22 @@ const StudentLobby = ({ onStart }) => {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container 
+      maxWidth="sm" // Changed from xs to sm for a wider look
+      sx={{ 
+        minHeight: "85vh", // Take up vertical space to allow centering
+        display: "flex", 
+        flexDirection: "column", 
+        justifyContent: "center", // Vertical centering
+        alignItems: "center" 
+      }}
+    >
       <Box
         sx={{
-          marginTop: 0,
-          marginBottom: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          width: "100%",
         }}
       >
         {/* Icon & Title */}
@@ -89,32 +97,45 @@ const StudentLobby = ({ onStart }) => {
           sx={{
             m: 1,
             bgcolor: "secondary.main",
-            p: 1,
+            p: 1.5,
             borderRadius: "50%",
             color: "white",
             backgroundColor: "#2B3752",
+            mb: 2,
           }}
         >
           <SchoolIcon
-            fontSize="medium"
+            fontSize="large"
             sx={{ color: "#F4F7ED", backgroundColor: "#2B3752" }}
           />
         </Box>
 
         <Typography
           component="h1"
-          variant="h5"
-          sx={{ mb: 3, fontFamily: "Rubik, sans-serif", color: "#2B3752" }}
+          variant="h4" // Increased font size
+          sx={{ 
+            mb: 4, 
+            fontFamily: "Rubik, sans-serif", 
+            color: "#2B3752",
+            fontWeight: "bold"
+          }}
         >
           כניסה למשחק
         </Typography>
 
         {/* Login Form */}
-        <Paper elevation={3} sx={{ p: 3, width: "80%", borderRadius: 2 }}>
+        <Paper 
+          elevation={4} // Increased elevation for depth
+          sx={{ 
+            p: 5, // Increased padding
+            width: "100%", 
+            borderRadius: 3,
+            fontFamily: "Rubik, sans-serif" 
+          }}
+        >
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
-              margin="dense"
-              size="small"
+              margin="normal" // Changed from dense to normal for more spacing
               required
               fullWidth
               label="קוד משחק"
@@ -124,34 +145,37 @@ const StudentLobby = ({ onStart }) => {
               disabled={loading}
               InputLabelProps={{ style: { fontFamily: "Rubik, sans-serif" } }}
               sx={{
-                // טקסט רגיל (לא בפוקוס)
+                mb: 3, // Add margin bottom
+
+                // Normal text (not focused)
                 "& .MuiInputBase-input": {
                   color: "#000",
                   fontFamily: "Rubik, sans-serif",
+                  fontSize: "1.1rem"
                 },
 
-                // טקסט בפוקוס בלבד
+                // Text on focus
                 "& .MuiInputBase-input:focus": {
                   color: "#2E6E65",
                 },
 
-                // label רגיל
+                // Normal label
                 "& .MuiInputLabel-root": {
                   color: "#9e9e9e",
                   fontFamily: "Rubik, sans-serif",
                 },
 
-                // label בפוקוס
+                // Focused label
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#2E6E65",
                 },
 
-                // מסגרת רגילה
+                // Normal border
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#9e9e9e",
                 },
 
-                // מסגרת בפוקוס בלבד
+                // Focused border
                 "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
                   {
                     borderColor: "#2E6E65",
@@ -160,8 +184,7 @@ const StudentLobby = ({ onStart }) => {
             />
 
             <TextField
-              margin="dense"
-              size="small"
+              margin="normal"
               required
               fullWidth
               label="כינוי"
@@ -171,34 +194,37 @@ const StudentLobby = ({ onStart }) => {
               disabled={loading}
               InputLabelProps={{ style: { fontFamily: "Rubik, sans-serif" } }}
               sx={{
-                // טקסט רגיל
+                mb: 2, 
+
+                // Normal text
                 "& .MuiInputBase-input": {
                   color: "#000",
                   fontFamily: "Rubik, sans-serif",
+                  fontSize: "1.1rem"
                 },
 
-                // טקסט בפוקוס בלבד
+                // Text on focus
                 "& .MuiInputBase-input:focus": {
                   color: "#2E6E65",
                 },
 
-                // label רגיל
+                // Normal label
                 "& .MuiInputLabel-root": {
                   color: "#9e9e9e",
                   fontFamily: "Rubik, sans-serif",
                 },
 
-                // label בפוקוס
+                // Focused label
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#2E6E65",
                 },
 
-                // מסגרת רגילה
+                // Normal border
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#9e9e9e",
                 },
 
-                // מסגרת בפוקוס בלבד
+                // Focused border
                 "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
                   {
                     borderColor: "#2E6E65",
@@ -208,7 +234,14 @@ const StudentLobby = ({ onStart }) => {
 
             {/* Error Message Display */}
             {error && (
-              <Alert severity="error" sx={{ mt: 2, fontSize: "0.9rem" }}>
+              <Alert 
+                severity="error" 
+                sx={{ 
+                  mt: 2, 
+                  fontSize: "0.9rem", 
+                  fontFamily: "Rubik, sans-serif" 
+                }}
+              >
                 {error}
               </Alert>
             )}
@@ -221,18 +254,21 @@ const StudentLobby = ({ onStart }) => {
               onClick={handleStart}
               disabled={loading}
               sx={{
-                mt: 2,
-                mb: 1,
-                py: 1,
-                fontSize: "1.1rem",
+                mt: 4,
+                mb: 2,
+                py: 1.5, // Taller button
+                fontSize: "1.2rem",
                 fontWeight: "bold",
                 fontFamily: "Rubik, sans-serif",
                 color: "#F4F7ED",
                 backgroundColor: "#2E6E65",
+                "&:hover": {
+                    backgroundColor: "#265751",
+                },
               }}
             >
               {loading ? (
-                <CircularProgress size={24} color="#2E6E65" />
+                <CircularProgress size={24} color="inherit" />
               ) : (
                 "בואו נתחיל!"
               )}

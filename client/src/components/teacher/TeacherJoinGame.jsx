@@ -11,60 +11,83 @@ const GameStats = ({ onBack, onGameFound }) => {
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto' }}>
-      <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color:"#2B3752"}}>
+      <Typography 
+        variant="h5" 
+        sx={{ 
+          mb: 3, 
+          fontWeight: 'bold', 
+          color: "#2B3752",
+          fontFamily: 'Rubik, sans-serif' // Applied font to title
+        }}
+      >
         כניסה למשחק קיים
       </Typography>
-     <TextField 
-  label="קוד משחק" 
-  fullWidth
-  value={code}
-  onChange={(e) => setCode(e.target.value)}
-  dir="rtl"
-  sx={{
-    mb: 4,
 
-    // טקסט רגיל
-    '& .MuiInputBase-input': {
-      color: '#000',
-      fontFamily: 'Rubik, sans-serif',
-    },
+      <TextField 
+        label="קוד משחק" 
+        fullWidth
+        value={code}
+        onChange={(e) => setCode(e.target.value)}
+        dir="rtl"
+        sx={{
+          mb: 4,
 
-    // טקסט בפוקוס בלבד
-    '& .MuiInputBase-input:focus': {
-      color: '#2E6E65',
-    },
+          // Normal input text
+          '& .MuiInputBase-input': {
+            color: '#000',
+            fontFamily: 'Rubik, sans-serif', // Applied font
+          },
 
-    // label רגיל
-    '& .MuiInputLabel-root': {
-      color: '#9e9e9e',
-    },
+          // Input text on focus
+          '& .MuiInputBase-input:focus': {
+            color: '#2E6E65',
+          },
 
-    // label בפוקוס
-    '& .MuiInputLabel-root.Mui-focused': {
-      color: '#2E6E65',
-    },
+          // Normal label
+          '& .MuiInputLabel-root': {
+            color: '#9e9e9e',
+            fontFamily: 'Rubik, sans-serif', // Applied font
+          },
 
-    // מסגרת רגילה
-    '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#9e9e9e',
-    },
+          // Label on focus
+          '& .MuiInputLabel-root.Mui-focused': {
+            color: '#2E6E65',
+          },
 
-    // מסגרת בפוקוס בלבד
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#2E6E65',
-    },
-  }}
-/>
+          // Normal border
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#9e9e9e',
+          },
 
+          // Border on focus
+          '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#2E6E65',
+          },
+        }}
+      />
 
       <Stack direction="row" justifyContent="space-between">
-        <Button variant="secondary" onClick={onBack} sx={{ color: "#2E6E65", borderColor:"#2E6E65"}} >חזרה</Button>
+        <Button 
+          variant="secondary" 
+          onClick={onBack} 
+          sx={{ 
+            color: "#2E6E65", 
+            borderColor: "#2E6E65",
+            fontFamily: 'Rubik, sans-serif' // Applied font
+          }} 
+        >
+          חזרה
+        </Button>
         <Button 
           variant="primary" 
           onClick={() => {
             if(code) onGameFound(code.toUpperCase());
           }}
-          sx={{ color: "#F4F7ED", backgroundColor:"#2E6E65"}} 
+          sx={{ 
+            color: "#F4F7ED", 
+            backgroundColor: "#2E6E65",
+            fontFamily: 'Rubik, sans-serif' // Applied font
+          }} 
         >
           הצג נתונים
         </Button>

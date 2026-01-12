@@ -157,6 +157,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     return <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />;
   }
 
+  // --- ERROR STATE: Game Not Found ---
   if (!gameData) {
     return (
       <Paper
@@ -172,6 +173,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           backgroundColor: "#E8F6F3",
           border: "1.5px solid #2E6E65",
           borderRadius: 3,
+          fontFamily: "Rubik, sans-serif",
         }}
       >
         <Typography
@@ -186,7 +188,10 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           קוד משחק שגוי
         </Typography>
 
-        <Typography color="text.secondary" sx={{ mb: 3, lineHeight: 1.8 }}>
+        <Typography 
+          color="text.secondary" 
+          sx={{ mb: 3, lineHeight: 1.8, fontFamily: "Rubik, sans-serif" }}
+        >
           לא הצלחנו למצוא משחק עם הקוד <b>{String(gameCode || "").trim()}</b>.
           <br />
           בדקו שהקוד נכון ונסו שוב.
@@ -199,6 +204,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
             backgroundColor: "#2E6E65",
             color: "#fff",
             fontWeight: "bold",
+            fontFamily: "Rubik, sans-serif",
             px: 4,
             py: 1.2,
             "&:hover": { backgroundColor: "#265751" },
@@ -210,6 +216,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     );
   }
 
+  // --- STATS VIEW ---
   if (view === "stats") {
     return (
       <GameStats
@@ -220,6 +227,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     );
   }
 
+  // --- MAIN LOBBY VIEW ---
   const finishedCount = gameData?.students
     ? gameData.students.filter((s) => s.finished).length
     : 0;
@@ -236,11 +244,17 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           width: "100%",
           textAlign: "center",
           direction: "rtl",
+          fontFamily: "Rubik, sans-serif",
         }}
       >
         <Typography
           variant="h5"
-          sx={{ mb: 1, fontWeight: "bold", color: "#2B3752" }}
+          sx={{ 
+            mb: 1, 
+            fontWeight: "bold", 
+            color: "#2B3752",
+            fontFamily: "Rubik, sans-serif" 
+        }}
         >
           משחק בנושא: {topicDisplay}
         </Typography>
@@ -259,13 +273,19 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
             padding: "20px",
           }}
         >
-          <Typography variant="h6" color="text.secondary">
+          <Typography variant="h6" color="text.secondary" sx={{ fontFamily: "Rubik, sans-serif" }}>
             קוד משחק:
           </Typography>
 
           <Typography
             variant="h4"
-            sx={{ fontWeight: "bold", color: "#16a085", letterSpacing: 3 }}
+            sx={{ 
+                fontWeight: "bold", 
+                color: "#16a085", 
+                letterSpacing: 3,
+                fontFamily: "Rubik, sans-serif",
+                mx: 2
+            }}
           >
             {gameData.gameCode}
           </Typography>
@@ -279,7 +299,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
 
         {/* Stats and Controls Bar */}
         <Box sx={{ mb: 3, display: "flex", justifyContent: "center", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ fontFamily: "Rubik, sans-serif" }}>
             התחברו: <strong>{totalStudents}</strong>
           </Typography>
 
@@ -293,7 +313,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
               />
             }
             label={
-              <Typography sx={{ fontWeight: "bold", color: isActive ? "#2E6E65" : "#d32f2f" }}>
+              <Typography sx={{ fontWeight: "bold", fontFamily: "Rubik, sans-serif", color: isActive ? "#2E6E65" : "#d32f2f" }}>
                 {isActive ? "משחק פעיל " : "משחק לא פעיל"}
               </Typography>
             }
@@ -309,7 +329,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
             }}
           />
 
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ fontFamily: "Rubik, sans-serif" }}>
             סיימו: <strong>{finishedCount}</strong>
           </Typography>
         </Box>
@@ -328,6 +348,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
               backgroundColor: "#2E6E65",
               color: "#fff",
               fontWeight: "bold",
+              fontFamily: "Rubik, sans-serif",
               px: 4,
               py: 1.2,
               "&:hover": { backgroundColor: "#265751" },
@@ -344,6 +365,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
               border: "2px solid #2E6E65",
               backgroundColor: "transparent",
               fontWeight: "bold",
+              fontFamily: "Rubik, sans-serif",
               px: 4,
               py: 1.2,
               "&:hover": { backgroundColor: "#E8F6F3", borderColor: "#265751" },
@@ -358,20 +380,20 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           <Table stickyHeader dir="rtl">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: "bold" }}>שם התלמיד/ה</TableCell>
+                <TableCell sx={{ fontWeight: "bold", fontFamily: "Rubik, sans-serif" }}>שם התלמיד/ה</TableCell>
                 {gameTopics.map((topic) => (
                   <TableCell
                     key={topic}
                     align="center"
-                    sx={{ fontWeight: "bold" }}
+                    sx={{ fontWeight: "bold", fontFamily: "Rubik, sans-serif" }}
                   >
                     {TOPIC_LABELS[topic] || topic}
                   </TableCell>
                 ))}
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                <TableCell align="center" sx={{ fontWeight: "bold", fontFamily: "Rubik, sans-serif" }}>
                   ציון משוקלל
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                <TableCell align="center" sx={{ fontWeight: "bold", fontFamily: "Rubik, sans-serif" }}>
                   סטטוס
                 </TableCell>
               </TableRow>
@@ -381,7 +403,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
               {gameData?.students?.length ? (
                 gameData.students.map((student, idx) => (
                   <TableRow key={idx}>
-                    <TableCell>{student.username}</TableCell>
+                    <TableCell sx={{ fontFamily: "Rubik, sans-serif" }}>{student.username}</TableCell>
 
                     {gameTopics.map((topic) => {
                       const stats = student?.scoresByTopic?.[topic];
@@ -390,25 +412,31 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
                           ? (stats.total / stats.count).toFixed(1)
                           : "-";
                       return (
-                        <TableCell key={topic} align="center">
+                        <TableCell key={topic} align="center" sx={{ fontFamily: "Rubik, sans-serif" }}>
                           {score}
                         </TableCell>
                       );
                     })}
 
-                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    <TableCell align="center" sx={{ fontWeight: "bold", fontFamily: "Rubik, sans-serif" }}>
                       {calculateLiveAverage(student, gameTopics)}
                     </TableCell>
 
                     <TableCell align="center">
                       {student.finished ? (
-                        <Chip label="סיימ/ה" color="success" size="small" />
+                        <Chip 
+                            label="סיימ/ה" 
+                            color="success" 
+                            size="small" 
+                            sx={{ fontFamily: "Rubik, sans-serif", fontWeight: "bold" }}
+                        />
                       ) : (
                         <Chip
                           label="משחק/ת..."
                           color="warning"
                           size="small"
                           variant="outlined"
+                          sx={{ fontFamily: "Rubik, sans-serif", fontWeight: "bold" }}
                         />
                       )}
                     </TableCell>
@@ -416,7 +444,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4 + gameTopics.length} align="center">
+                  <TableCell colSpan={4 + gameTopics.length} align="center" sx={{ fontFamily: "Rubik, sans-serif" }}>
                     אין תלמידים מחוברים
                   </TableCell>
                 </TableRow>
@@ -430,6 +458,8 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           autoHideDuration={2000}
           onClose={() => setCopied(false)}
           message="קוד המשחק הועתק!"
+          // Ensure Snackbar font matches
+          ContentProps={{ sx: { fontFamily: "Rubik, sans-serif" } }} 
         />
       </Paper>
     </Box>
