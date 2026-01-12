@@ -1,53 +1,94 @@
-// server/utils/gameStore.js
+import Game from '../models/Game.js'; 
 
-/**
- * In-memory database.
- * Key: Game Code, Value: Game Object
- */
-const games = {}; 
-
+// --- יצירת קוד רנדומלי ---
 const generateGameCode = () => {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
-export const createGame = (topics, questions) => {
-    let gameCode = generateGameCode();
-    while (games[gameCode]) {
-        gameCode = generateGameCode();
-    }
+// --- יצירת משחק חדש (Create) ---
+export const createGame = async (topics, questions) => {
+    try {
+        let gameCode = generateGameCode();
+        
+        // בדיקת כפילויות מול ה-DB
+        let existingGame = await Game.findOne({ gameCode: gameCode });
+        while (existingGame) {
+            gameCode = generateGameCode();
+            existingGame = await Game.findOne({ gameCode: gameCode });
+        }
 
-    games[gameCode] = {
-        id: gameCode,
-        topics: topics, 
-        isActive: true, 
-        students: [], // [{ username, answers: [] }]
-        questions: questions,
-        createdAt: new Date().toISOString()
-    };
-    
-    console.log(`[GameStore] Game created: ${gameCode}`);
-    return games[gameCode];
+        // יצירת האובייקט לפי הסכמה
+        const newGame = new Game({
+            gameCode: gameCode,
+            topics: topics,
+            questions: questions,
+            isActive: true,
+            submissions: [] 
+        });
+
+        // שמירה פיזית ב-DB
+        await newGame.save();
+        console.log(`[MongoDB] Game created: ${gameCode}`);
+        return newGame;
+
+    } catch (error) {
+        console.error("Error creating game:", error);
+        throw error;
+    }
 };
 
-export const getGame = (gameCode) => {
-    return games[gameCode];
+// --- קבלת משחק (Get) ---
+export const getGame = async (gameCode) => {
+    try {
+        const game = await Game.findOne({ gameCode: gameCode });
+        return game;
+    } catch (error) {
+        console.error("Error fetching game:", error);
+        return null;
+    }
 };
 
-// --- Support Student Actions ---
+// --- עדכון/הוספת תשובות תלמיד (Update) ---
+export const addStudentAnswer = async (gameCode, username, answers) => {
+    try {
+        // 1. מביאים את המשחק
+        const game = await Game.findOne({ gameCode: gameCode });
+        if (!game) return null;
 
-export const addStudentAnswer = (gameCode, username, answers) => {
-    const game = games[gameCode];
-    if (!game) return null;
+        // 2. מחפשים את התלמיד
+        let student = game.submissions.find(s => s.username === username);
 
-    // Check if student exists, if not create one
-    let student = game.students.find(s => s.username === username);
-    if (!student) {
-        student = { username, answers: [], submittedAt: null };
-        game.students.push(student);
+        if (!student) {
+            // אם התלמיד לא קיים (נדיר, כי בדרך כלל עושים Join קודם), ניצור אותו עם המבנה הנכון
+            student = {
+                username,
+                scoresByTopic: {},
+                answeredIds: [], // שימי לב: שינינו ל-answeredIds כדי להתאים לסכמה
+                questionsQueue: [...game.questions], // מאתחלים את התור
+                finished: false,
+                finalScore: 0
+            };
+            game.submissions.push(student);
+        }
+
+        // 3. עדכון הנתונים (מסנכרנים מול השדות בסכמה)
+        // אם 'answers' מכיל IDs של שאלות, נשמור אותם ב-answeredIds
+        if (Array.isArray(answers)) {
+            student.answeredIds = answers; 
+        }
+
+        // 4. הודעה למונגו שהמערך השתנה (קריטי לעדכונים עמוקים)
+        game.markModified('submissions');
+
+        // 5. שמירה
+        await game.save();
+        
+        // מחזירים את התלמיד המעודכן
+        // שולפים מחדש מהמערך המעודכן כדי לוודא שהכל שם
+        return game.submissions.find(s => s.username === username);
+
+    } catch (error) {
+        console.error("Error saving answer:", error);
+        return null;
     }
-
-    student.answers = answers;
-    student.submittedAt = new Date().toISOString();
-    
-    return student;
 };
