@@ -53,7 +53,8 @@ function App() {
       return false;
     }
 
-    setUser({ role: foundUser.role }); // teacher | student
+    setUser({ role: foundUser.role, username: foundUser.username }); // teacher | student
+    console.log("user:", username);
     return true;
   };
 
@@ -70,7 +71,7 @@ function App() {
         {/* 👋 GREETING */}
         {user && (
           <Typography variant="h5" sx={styles.greeting}>
-            שלום {user.role === "teacher" ? "מורה/מנהל" : "תלמיד/ה"}
+            שלום {user.username}
           </Typography>
         )}
 
