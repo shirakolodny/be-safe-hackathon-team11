@@ -5,24 +5,16 @@ import PsychologyIcon from "@mui/icons-material/Psychology";
 import SecurityIcon from "@mui/icons-material/Security";
 import SchoolIcon from "@mui/icons-material/School";
 
-const heroImage = "/images/besafepic.jpg"; // public/images/besafepic.jpg
+const heroImage = "/images/besafepic.jpg";
 
 function Feature({ Icon, title, text }) {
   return (
-    <Box
-      sx={{
-        flex: 1,
-        minWidth: 0,
-        textAlign: "center",
-        color: "#0E2A2A",
-        px: 1,
-      }}
-    >
-      <Icon sx={{ fontSize: 40, mb: 1 }} />
-      <Typography sx={{ fontWeight: 800, fontSize: "1rem", mb: 0.5 }}>
+    <Box sx={{ flex: 1, textAlign: "center", color: "#0E2A2A", px: 1 }}>
+      <Icon sx={{ fontSize: 42, mb: 1.5 }} />
+      <Typography sx={{ fontWeight: 800, fontSize: "1.1rem", mb: 0.5 }}>
         {title}
       </Typography>
-      <Typography sx={{ fontSize: "0.9rem", lineHeight: 1.6 }}>
+      <Typography sx={{ fontSize: "0.95rem", lineHeight: 1.6 }}>
         {text}
       </Typography>
     </Box>
@@ -30,24 +22,10 @@ function Feature({ Icon, title, text }) {
 }
 
 export default function HomePage() {
-  // ✅ בלי לשנות App/Header ובלי לחשב גובה:
-  // הופכים זמנית את #root ל-flex column בגובה מסך, כדי שהעמוד יתחלק: Header למעלה + HomePage למטה
   useEffect(() => {
     const root = document.getElementById("root");
     const html = document.documentElement;
     const body = document.body;
-
-    const prev = {
-      rootDisplay: root?.style.display,
-      rootFlexDirection: root?.style.flexDirection,
-      rootHeight: root?.style.height,
-      rootOverflow: root?.style.overflow,
-      bodyMargin: body.style.margin,
-      htmlOverflow: html.style.overflow,
-      bodyOverflow: body.style.overflow,
-      htmlOverflowX: html.style.overflowX,
-      bodyOverflowX: body.style.overflowX,
-    };
 
     if (root) {
       root.style.display = "flex";
@@ -55,25 +33,17 @@ export default function HomePage() {
       root.style.height = "100vh";
       root.style.overflow = "hidden";
     }
-
-    body.style.margin = "0";
     html.style.overflow = "hidden";
     body.style.overflow = "hidden";
-    html.style.overflowX = "hidden";
-    body.style.overflowX = "hidden";
 
     return () => {
       if (root) {
-        root.style.display = prev.rootDisplay || "";
-        root.style.flexDirection = prev.rootFlexDirection || "";
-        root.style.height = prev.rootHeight || "";
-        root.style.overflow = prev.rootOverflow || "";
+        root.style.display = "";
+        root.style.flexDirection = "";
+        root.style.height = "";
       }
-      body.style.margin = prev.bodyMargin || "";
-      html.style.overflow = prev.htmlOverflow || "";
-      body.style.overflow = prev.bodyOverflow || "";
-      html.style.overflowX = prev.htmlOverflowX || "";
-      body.style.overflowX = prev.bodyOverflowX || "";
+      html.style.overflow = "";
+      body.style.overflow = "";
     };
   }, []);
 
@@ -81,49 +51,39 @@ export default function HomePage() {
     <Box
       dir="rtl"
       sx={{
-        flex: 1, // ✅ תופס את כל מה שנשאר מתחת ל-header
-        minHeight: 0,
-        width: "100%",
-        overflow: "hidden",
-        backgroundColor: "#F4F7ED",
+        flex: 1,
         display: "flex",
         flexDirection: "column",
+        backgroundColor: "#F4F7ED",
+        overflow: "hidden",
       }}
     >
-      {/* HERO (כחול על כל הרוחב) */}
+      {/* HERO SECTION */}
       <Box
         sx={{
-          flex: "0 0 66%",
-          minHeight: 0,
-          width: "100%",
-          backgroundColor: "#89b7c5ff",
+          flex: "0 0 72%", // הגדלה קלה של אזור ההירו
           display: "flex",
           alignItems: "center",
-          px: { xs: 2, md: 6 },
-          boxSizing: "border-box",
-          overflow: "hidden",
+          backgroundColor: "#89b7c5ff",
+          px: { xs: 4, md: 10 },
         }}
       >
         <Box
           sx={{
-            width: "100%",
-            height: "100%",
             display: "flex",
-            alignItems: "center",
-            gap: { xs: 2, md: 4 },
-            overflow: "hidden",
+            width: "100%",
+            height: "85%",
+            alignItems: "stretch",
+            gap: 10,
           }}
         >
-          {/* תמונה - קצת קטנה יותר + רדיוס גדול */}
+          {/* תמונה בצד ימין - הוגדלה ל-55% */}
           <Box
             sx={{
-              flex: "0 0 50%",
-              minWidth: 0,
-              height: "100%",
+              flex: "0 0 55%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              overflow: "hidden",
             }}
           >
             <Box
@@ -132,34 +92,31 @@ export default function HomePage() {
               alt="BeSafe"
               sx={{
                 width: "100%",
-                maxHeight: "84%", // ✅ טיפה קטן יותר
-                objectFit: "contain", // ✅ תמונה שלמה
-                borderRadius: 8, // ✅ יותר עגול
-                display: "block",
+                height: "100%",
+                objectFit: "contain",
+                borderRadius: 12, // רדיוס מעט גדול יותר למראה מודרני
+                filter: "drop-shadow(0px 10px 20px rgba(0,0,0,0.15))",
               }}
             />
           </Box>
 
+          {/* טקסט בצד שמאל */}
           <Box
             sx={{
-              flex: "0 0 50%", // ✅ אותו רוחב כמו התמונה
-              minWidth: 0,
-              height: "100%",
+              flex: 1,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
-              gap: 1.4,
-              px: 3, // ריווח פנימי – לא משפיע על הרוחב
-              overflow: "hidden",
+              justifyContent: "space-between",
+              py: 2,
             }}
           >
+            {/* כותרת - הוקטנה מעט */}
             <Typography
               sx={{
                 fontWeight: 900,
-                fontSize: "clamp(2rem, 2.6vw, 3rem)",
-                lineHeight: 1.12,
-                overflowWrap: "anywhere",
-                wordBreak: "break-word",
+                fontSize: "clamp(2.5rem, 2.4vw, 2.8rem)", // הקטנה של הכותרת
+                lineHeight: 1.2,
+                color: "#0E2A2A",
               }}
             >
               המרחב הדיגיטלי שלכם
@@ -167,66 +124,60 @@ export default function HomePage() {
               בטוח, חכם ומבוסס חוויה
             </Typography>
 
-            <Typography
-              sx={{
-                fontSize: "clamp(1.2rem, 1.2vw, 1.25rem)",
-                lineHeight: 1.75,
-                overflowWrap: "anywhere",
-                wordBreak: "break-word",
-              }}
-            >
-              לומדים להתמודד עם סיטואציות אמיתיות ברשת – פרטיות, שיימינג, פייק ,
-              ניוז ובריונות. מתרגלים קבלת החלטות, מקבלים פידבק חכם.
-            </Typography>
+            {/* תיאור - הוגדל משמעותית וקיבל מרחב */}
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+              <Typography
+                sx={{
+                  fontSize: "clamp(1.3rem, 1.6vw, 1.8rem)", // הגדלה משמעותית
+                  lineHeight: 1.6,
+                  fontWeight: 500,
+                  color: "rgba(14, 42, 42, 0.9)",
+                }}
+              >
+                לומדים להתמודד עם סיטואציות אמיתיות ברשת – פרטיות, שיימינג, פייק
+                ניוז ובריונות. מתרגלים קבלת החלטות ומקבלים פידבק חכם בזמן אמת.
+              </Typography>
+            </Box>
 
-            {/* כפתור כניסה - מרובע + רווח בין האייקון לטקסט */}
-            <Box sx={{ mt: 2 }}>
+            {/* כפתור */}
+            <Box>
               <Button
                 variant="contained"
                 startIcon={<LoginIcon />}
                 sx={{
                   backgroundColor: "#2E6E65",
-                  px: 4,
-                  py: 1.2,
-                  borderRadius: 1, // מרובע
+                  px: 4, // כפתור רחב יותר
+                  py: 2,
+                  borderRadius: 1.5,
                   fontWeight: 800,
-                  fontSize: "1rem",
-                  "& .MuiButton-startIcon": {
-                    marginLeft: 1, // ✅ רווח (RTL)
-                    marginRight: 0,
+                  fontSize: "1.2rem",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  "& .MuiButton-startIcon": { ml: 2, mr: 0 },
+                  "&:hover": {
+                    backgroundColor: "#255E56",
+                    transform: "translateY(-2px)",
                   },
-                  "&:hover": { backgroundColor: "#255E56" },
+                  transition: "all 0.2s",
                 }}
               >
-                כניסה
+                כניסה למערכת
               </Button>
             </Box>
           </Box>
         </Box>
       </Box>
 
-      {/* FEATURES - על כל הרוחב, בלי רקע נוסף */}
+      {/* FEATURES SECTION */}
       <Box
         sx={{
-          flex: "1 1 auto",
-          minHeight: 0,
-          width: "100%",
-          backgroundColor: "#F4F7ED",
+          flex: 1,
           display: "flex",
           alignItems: "center",
-          px: { xs: 2, md: 6 },
-          boxSizing: "border-box",
-          overflow: "hidden",
+          px: { xs: 4, md: 12 },
+          backgroundColor: "#F4F7ED",
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            gap: { xs: 1, md: 3 },
-          }}
-        >
+        <Box sx={{ width: "100%", display: "flex", gap: 6 }}>
           <Feature
             Icon={PsychologyIcon}
             title="פידבק חכם"
