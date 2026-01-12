@@ -1,18 +1,13 @@
-import { useState } from "react";
-
 // MUI
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 
 // Components
 import Header from "./components/layout/Header";
-import LoginPage from "./pages/LoginPage";
-import TeacherDashboard from "./pages/TeacherDashboard";
-import StudentDashboard from "./pages/StudentDashboard";
+import HomePage from "./pages/HomePage";
 
 // Auth helpers
-import { findUser } from "./auth/demoUsers";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 
 const styles = {
   appWrapper: {
@@ -43,45 +38,12 @@ const styles = {
 };
 
 function App() {
-  const [user, setUser] = useState(null);
-
-  // 🔐 Login handler
-  const handleLogin = (username, password) => {
-    const foundUser = findUser(username, password);
-
-    if (!foundUser) {
-      return false;
-    }
-
-    setUser({ role: foundUser.role, username: foundUser.username }); // teacher | student
-    console.log("user:", username);
-    return true;
-  };
-
-  const handleLogout = () => setUser(null);
-
   return (
     <Box sx={styles.appWrapper}>
-      <Header onLogout={user ? handleLogout : undefined} />
-
-      <Container maxWidth="md" sx={styles.mainContainer}>
-        {/* 🔐 LOGIN */}
-        {!user && <LoginPage onLogin={handleLogin} />}
-
-        {/* 👋 GREETING */}
-        {user && (
-          <Typography variant="h5" sx={styles.greeting}>
-            שלום {user.username}
-          </Typography>
-        )}
-
-        {/* 👩‍🏫 TEACHER */}
-        {user?.role === "teacher" && <TeacherDashboard />}
-
-        {/* 🧑‍🎓 STUDENT */}
-        {user?.role === "student" && <StudentDashboard />}
-      </Container>
-
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
       <Box component="footer" sx={styles.footer}>
         <Typography variant="body2" color="text.secondary">
           © 2025 QueenB Hackathon – Team 11
