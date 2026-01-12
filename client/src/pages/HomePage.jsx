@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom"; // ייבוא הניווט
 import { Box, Typography, Button } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
@@ -7,6 +8,11 @@ import SecurityIcon from "@mui/icons-material/Security";
 import SchoolIcon from "@mui/icons-material/School";
 
 const heroImage = "/images/besafepic.png";
+Feature.propTypes = {
+  Icon: PropTypes.elementType.isRequired,
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+};
 
 function Feature({ Icon, title, text }) {
   return (
