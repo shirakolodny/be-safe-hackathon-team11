@@ -87,3 +87,43 @@ export const analyzeAnswerWithAI = async (question, studentAnswer, category) => 
     };
   }
 };
+
+
+/**
+ * Generates a pedagogical summary for the teacher based on class performance.
+ * @param {Object} stats - The calculated statistics per topic.
+ */
+export const generateClassSummary = async (stats) => {
+  try {
+    const model = "gpt-4o-mini";
+
+    const prompt = `
+      You are an expert pedagogical consultant for a Cyber Safety curriculum.
+      Analyze the following class performance data (Topic: Average Score out of 10):
+      ${JSON.stringify(stats)}
+
+      Your task:
+      1. Identify the topics where students struggled the most (lowest scores).
+      2. Provide a brief summary of the class status.
+      3. Suggest 2-3 specific discussion points or activities to reinforce the weak topics.
+
+      Output language: Hebrew (Natural, professional tone).
+      Keep it concise (max 4-5 sentences).
+    `;
+
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: "system", content: "You are a helpful teaching assistant." },
+        { role: "user", content: prompt }
+      ],
+      model: model,
+      temperature: 0.5,
+    });
+
+    return completion.choices[0].message.content;
+
+  } catch (error) {
+    console.error("[AI Service] Summary Error:", error);
+    return "לא ניתן היה ליצור סיכום כרגע. אנא נסה שנית מאוחר יותר.";
+  }
+};

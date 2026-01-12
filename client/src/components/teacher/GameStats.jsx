@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -12,7 +13,10 @@ import {
   TableHead,
   TableRow,
   LinearProgress,
+  Card,
+  CardContent,
 } from "@mui/material";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Button from "../common/Button";
 
 import {
@@ -33,12 +37,11 @@ const safeNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 
 /**
- * אם הציון אצלכם 0..10 תשאירי 10
- * אם הוא 0..100 תשני ל-100
+ * Scale definition (0-10 or 0-100)
  */
 const scoreScaleMax = 10;
 
-// 🎨 צבע אחיד לסטטיסטיקות
+// Theme Colors
 const THEME = {
   primary: "#2E6E65",
   primaryHover: "#265751",
@@ -48,7 +51,7 @@ const THEME = {
   grid: "rgba(46, 110, 101, 0.18)",
 };
 
-// וריאציות עדינות ל-Pie (עדיין באותה משפחה של #2E6E65)
+// Pie Chart Colors
 const PIE_COLORS = [
   "#2E6E65",
   "#3C8076",
@@ -58,11 +61,67 @@ const PIE_COLORS = [
   "#7DC9BC",
 ];
 
+// --- Custom Label Function for Pie Chart ---
+const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent }) => {
+    const RADIAN = Math.PI / 180;
+    // Push the label out by 1.2x the radius
+    const radius = outerRadius * 1.2; 
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  
+    // Do not show label if slice is very small (< 1%)
+    if (percent < 0.01) return null;
+  
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={THEME.title}
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontWeight="bold"
+        fontSize="14px"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+};
+
 const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
   const topics = gameData?.topics || [];
   const students = gameData?.students || [];
 
-  // === aggregate per topic ===
+  // --- AI Summary State ---
+  const [summary, setSummary] = useState("");
+  const [loadingSummary, setLoadingSummary] = useState(false);
+  
+  // Determine if game is active (default to true if undefined)
+  const isActive = gameData?.isActive ?? true;
+
+  const API_BASE = (import.meta?.env?.VITE_SERVER_API_URL || "http://localhost:5001").replace(/\/$/, "");
+
+  // --- Effect: Fetch AI Summary if game is INACTIVE ---
+  useEffect(() => {
+    if (!isActive && !summary) {
+        const fetchSummary = async () => {
+            setLoadingSummary(true);
+            try {
+                const res = await fetch(`${API_BASE}/games/${gameData.gameCode}/summary`);
+                if (!res.ok) throw new Error("Failed to fetch summary");
+                const data = await res.json();
+                setSummary(data.summary);
+            } catch (error) {
+                console.error("Failed to fetch summary", error);
+                setSummary("Failed to load recommendations.");
+            } finally {
+                setLoadingSummary(false);
+            }
+        };
+        fetchSummary();
+    }
+  }, [isActive, gameData.gameCode, summary, API_BASE]);
+
+  // === Aggregate stats per topic ===
   const perTopic = topics.map((topic) => {
     const agg = students.reduce(
       (acc, s) => {
@@ -104,13 +163,14 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
 
   const overallPercent = clamp01(overallAvg / scoreScaleMax) * 100;
 
-  // === chart data ===
+  // === Prepare Chart Data ===
   const pieData = perTopicWithPercent
     .filter((t) => t.totalCount > 0)
     .map((t) => ({
       name: t.label,
       value: t.totalCount,
-      percent: t.percent,
+      // CHANGE: Renamed to avoid conflict with Recharts 'percent' prop
+      dataPercent: t.percent, 
     }));
 
   const barsCountData = perTopicWithPercent.map((t) => ({
@@ -130,7 +190,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
       <Paper
         elevation={3}
         sx={{
-          p: { xs: 3, sm: 5 }, // ✅ יותר "אוויר" מסביב
+          p: { xs: 3, sm: 5 },
           maxWidth: 1000,
           width: "100%",
           mx: "auto",
@@ -138,9 +198,8 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
           borderRadius: 3,
         }}
       >
-        {/* ✅ ריווח קבוע בין כל הסקשנים */}
         <Stack spacing={5}>
-          {/* Header */}
+          {/* --- Header --- */}
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -173,6 +232,36 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
             </Button>
           </Stack>
 
+          {/* --- AI Recommendation Section --- */}
+          <Card sx={{ 
+                border: "1px solid #2E6E65", 
+                backgroundColor: isActive ? "#f5f5f5" : "#E8F6F3",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.05)" 
+            }}>
+                <CardContent sx={{ textAlign: "right", p: 3 }}>
+                    <Stack direction="row" alignItems="center" gap={1} mb={2} justifyContent="flex-start">
+                        <AutoAwesomeIcon sx={{ color: "#2E6E65" }} />
+                        <Typography variant="h6" fontWeight="bold" color="#2E6E65">
+                             המלצות להמשך
+                        </Typography>
+                    </Stack>
+
+                    {isActive ? (
+                        <Typography color="text.secondary" sx={{ fontStyle: "italic" }}>
+                            המשחק כעת פעיל. בסיום המשחק (כשתנעל/י אותו), המערכת תנתח את התוצאות ותפיק המלצות פדגוגיות להמשך השיעור.
+                        </Typography>
+                    ) : (
+                        loadingSummary ? (
+                            <Typography>מנתח נתונים ומגבש המלצות...</Typography>
+                        ) : (
+                            <Typography sx={{ whiteSpace: "pre-line", lineHeight: 1.8 }}>
+                                {summary || "לא התקבלו המלצות."}
+                            </Typography>
+                        )
+                    )}
+                </CardContent>
+            </Card>
+
           <Typography
             variant="body1"
             sx={{
@@ -185,7 +274,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
             התפלגות באחוזים.
           </Typography>
 
-          {/* Summary cards */}
+          {/* --- Summary cards --- */}
           <Stack
             direction={{ xs: "column", md: "row" }}
             spacing={4}
@@ -271,12 +360,12 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
 
           <Divider />
 
-          {/* Pie + Legend */}
+          {/* --- Pie + Legend --- */}
           <Box>
             <Typography
               variant="h6"
               sx={{
-                mb: 3, // ✅ יותר רווח בין כותרת לתוכן
+                mb: 3,
                 fontWeight: 900,
                 textAlign: "right",
                 color: THEME.title,
@@ -317,10 +406,15 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                           cx="50%"
                           cy="50%"
                           outerRadius={95}
-                          labelLine={false}
-                          label={({ percent }) =>
-                            `${Math.round(percent * 100)}%`
-                          }
+                          // Enable lines connecting text to slice
+                          labelLine={{
+                            stroke: THEME.border,
+                            strokeWidth: 1,
+                            length: 15, 
+                            length2: 15 
+                          }}
+                          // Use the custom function (receives Recharts' percent 0-1)
+                          label={renderCustomizedLabel} 
                         >
                           {pieData.map((_, i) => (
                             <Cell
@@ -331,12 +425,15 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                         </Pie>
                         <ReTooltip
                           formatter={(value, name, tooltipItem) => {
-                            const p = tooltipItem?.payload?.percent ?? 0;
+                            // Use our renamed dataPercent for the tooltip
+                            const p = tooltipItem?.payload?.dataPercent ?? 0;
                             return [`${value} שאלות (${Math.round(p)}%)`, name];
                           }}
                           contentStyle={{
                             borderRadius: 12,
                             border: `1px solid ${THEME.border}`,
+                            textAlign: "right",
+                            direction: "rtl"
                           }}
                         />
                       </PieChart>
@@ -406,7 +503,8 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                         <Typography
                           sx={{ color: THEME.primary, fontWeight: 900 }}
                         >
-                          {Math.round(d.percent)}%
+                          {/* Use our renamed dataPercent */}
+                          {Math.round(d.dataPercent)}%
                         </Typography>
                       </Stack>
                     ))
@@ -418,7 +516,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
 
           <Divider />
 
-          {/* Bar: Counts */}
+          {/* --- Bar: Counts --- */}
           <Box>
             <Typography
               variant="h6"
@@ -484,7 +582,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
 
           <Divider />
 
-          {/* Bar: Scores */}
+          {/* --- Bar: Scores --- */}
           <Box>
             <Typography
               variant="h6"
@@ -554,7 +652,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
 
           <Divider />
 
-          {/* Table */}
+          {/* --- Table --- */}
           <Box>
             <Typography
               variant="h6"

@@ -1,6 +1,6 @@
 import express from "express";
 import { getGame } from "../utils/gameStore.js";
-import { analyzeAnswerWithAI } from "../utils/aiService.js";
+import { analyzeAnswerWithAI, generateClassSummary } from "../utils/aiService.js";
 import { getQuestionsForClass } from "../utils/aiQuestions.js";
 
 const router = express.Router();
@@ -12,6 +12,17 @@ router.post("/:code/join", (req, res) => {
 
     const game = getGame(code);
     if (!game) return res.status(404).json({ error: "Game not found" });
+
+    // NEW: Check if game is locked by the teacher
+    if (!game.isActive) {
+        // We check if the student ALREADY exists. 
+        // If they exist, we might allow them to rejoin (to see results/locked screen).
+        // If they are new, we block them.
+        const existing = game.students.find(s => s.username === username);
+        if (!existing) {
+             return res.status(403).json({ error: "Game is locked by the teacher." });
+        }
+    }
 
     // Check if username already exists in this game
     const existingStudent = game.students.find(s => s.username === username);
@@ -47,6 +58,8 @@ router.get("/:code/start", (req, res) => {
 
     // Fallback: If student doesn't exist (e.g. server restart), recreate them
     if (!student) {
+        // Note: If the game is locked, you might want to prevent recreation here too,
+        // but for now we allow resumption to prevent data loss glitches.
         student = {
             username,
             scoresByTopic: {},
@@ -65,7 +78,9 @@ router.get("/:code/start", (req, res) => {
         nextQuestion: nextQ,
         // Critical for resuming: tell client how many were already answered
         answeredCount: student.answeredIds.length,
-        finished: student.finished
+        finished: student.finished,
+        // Optional: Send game status so client knows immediately if it's locked
+        isGameActive: game.isActive 
     });
 });
 
@@ -76,6 +91,12 @@ router.post("/:code/answer", async(req, res) => {
 
     const game = getGame(code);
     if (!game) return res.status(404).json({ error: "Game not found" });
+
+    // NEW: Check Lock Status
+    // If teacher locked the game, reject the answer
+    if (!game.isActive) {
+        return res.status(403).json({ error: "Game Locked", action: "EXIT" });
+    }
 
     const student = game.students.find(s => s.username === username);
     if (!student) return res.status(404).json({ error: "Student not found" });
@@ -137,6 +158,78 @@ router.post("/:code/answer", async(req, res) => {
     });
 });
 
+// --- 3. GET RESULTS (Teacher View) ---
+router.get("/:code/results", (req, res) => {
+    const code = req.params.code;
+    const game = getGame(code);
+    if (!game) return res.status(404).json({ error: "Game not found" });
+
+    return res.json({
+        gameCode: code,
+        isActive: game.isActive, // Send active status to teacher
+        topics: game.topics,
+        students: game.students.map(s => ({
+            username: s.username,
+            finished: s.finished,
+            score: s.finalScore,
+            scoresByTopic: s.scoresByTopic
+        }))
+    });
+});
+
+// --- 4. TOGGLE LOCK (Teacher Action) ---
+router.post("/:code/toggle-lock", (req, res) => {
+    const code = req.params.code;
+    const game = getGame(code);
+    if (!game) return res.status(404).json({ error: "Game not found" });
+
+    // Toggle the boolean
+    game.isActive = !game.isActive;
+    
+    console.log(`[Game] Code ${code} active status changed to: ${game.isActive}`);
+    res.json({ isActive: game.isActive });
+});
+
+// --- 5. GET AI SUMMARY (Teacher Action) ---
+router.get("/:code/summary", async (req, res) => {
+    const code = req.params.code;
+    const game = getGame(code);
+    if (!game) return res.status(404).json({ error: "Game not found" });
+
+    try {
+        // Calculate class-wide averages per topic
+        const topics = game.topics || [];
+        const classStats = {};
+        
+        topics.forEach(t => {
+            let totalScore = 0;
+            let totalCount = 0;
+            
+            game.students.forEach(s => {
+                if(s.scoresByTopic[t]) {
+                    totalScore += s.scoresByTopic[t].total;
+                    totalCount += s.scoresByTopic[t].count;
+                }
+            });
+            
+            // Avoid division by zero
+            classStats[t] = totalCount > 0 
+                ? (totalScore / totalCount).toFixed(1) 
+                : 0;
+        });
+
+        // Call the AI Service to generate the text summary
+        // Note: ensure generateClassSummary is exported from aiService.js
+        const summary = await generateClassSummary(classStats);
+        
+        res.json({ summary });
+    } catch (error) {
+        console.error("Error generating summary:", error);
+        res.status(500).json({ error: "Failed to generate summary" });
+    }
+});
+
+// --- HELPER: Calculate Score ---
 function calculateFinalScore(scoresMap) {
     let total = 0,
         count = 0;
@@ -146,22 +239,5 @@ function calculateFinalScore(scoresMap) {
     });
     return count === 0 ? 0 : Math.round((total / count) * 10) / 10;
 }
-
-// --- 3. GET RESULTS (Teacher View) ---
-router.get("/:code/results", (req, res) => {
-    const code = req.params.code;
-    const game = getGame(code);
-    if (!game) return res.status(404).json({ error: "Game not found" });
-
-    return res.json({
-        gameCode: code,
-        students: game.students.map(s => ({
-            username: s.username,
-            finished: s.finished,
-            score: s.finalScore,
-            scoresByTopic: s.scoresByTopic
-        }))
-    });
-});
 
 export default router;
