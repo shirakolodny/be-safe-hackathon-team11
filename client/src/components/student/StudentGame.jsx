@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-// MUI
+// MUI Imports
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -9,10 +9,9 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
-import LinearProgress from "@mui/material/LinearProgress";
-
 import Button from "../common/Button";
 
+// Style Constants
 const COLORS = {
   title: "#2B3752",
   primary: "#2E6E65",
@@ -21,16 +20,16 @@ const COLORS = {
   border: "rgba(43, 55, 82, 0.18)",
 };
 
-const TOTAL_QUESTIONS = 30;
-
 const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
+  // --- State Management ---
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answerText, setAnswerText] = useState("");
-  const [questionCount, setQuestionCount] = useState(1);
+  const [questionCount, setQuestionCount] = useState(1); // Used for display "Question X"
   const [feedbackData, setFeedbackData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true);
 
+  // --- Effect: Initialize Game ---
   useEffect(() => {
     const startGame = async () => {
       try {
@@ -50,6 +49,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
 
         if (data.nextQuestion) {
           setCurrentQuestion(data.nextQuestion);
+          // Set question count based on server data (answered + 1)
           setQuestionCount((data.answeredCount || 0) + 1);
         } else {
           onGameFinished();
@@ -64,6 +64,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
     startGame();
   }, [gameCode, studentName, onGameFinished]);
 
+  // --- Handler: Submit Answer ---
   const handleSubmit = async () => {
     if (!answerText.trim() || !currentQuestion) return;
 
@@ -86,6 +87,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
 
       const data = await res.json();
 
+      // Update state with feedback from AI
       setFeedbackData({
         feedback: data.feedback,
         nextQ: data.nextQuestion,
@@ -93,12 +95,13 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
       });
     } catch (err) {
       console.error("Error submitting answer:", err);
-      alert("שגיאה בשליחת התשובה");
+      alert("Error submitting answer");
     } finally {
       setLoading(false);
     }
   };
 
+  // --- Handler: Continue to Next Question ---
   const handleContinue = () => {
     if (!feedbackData) return;
 
@@ -107,26 +110,28 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
       return;
     }
 
+    // Update UI for next question
     setQuestionCount((prev) => prev + 1);
     setCurrentQuestion(feedbackData.nextQ);
     setAnswerText("");
     setFeedbackData(null);
   };
 
+  // --- Render: Loading State ---
   if (initializing) {
     return <CircularProgress sx={{ display: "block", mx: "auto", mt: 10 }} />;
   }
 
+  // --- Render: Error/Empty State ---
   if (!currentQuestion && !feedbackData) {
     return (
       <Typography align="center" sx={{ mt: 10 }}>
-        טוען נתונים...
+        Loading data...
       </Typography>
     );
   }
 
-  const progressValue = Math.min(100, (questionCount / TOTAL_QUESTIONS) * 100);
-
+  // --- Render: Main Game UI ---
   return (
     <Box
       sx={{
@@ -153,43 +158,25 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
           backgroundColor: "#fff",
         }}
       >
-        {/* HEADER: Progress */}
-        <Box sx={{ mb: 3 }}>
-          <StackRow>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 800, color: COLORS.title }}
+        {/* HEADER: Question Count Only */}
+        <Box sx={{ mb: 2 }}>
+            <Typography 
+                variant="subtitle1" 
+                sx={{ 
+                    fontWeight: 'bold', 
+                    color: COLORS.title,
+                    textAlign: 'center' 
+                }}
             >
-              שאלה {questionCount}
+                שאלה {questionCount}
             </Typography>
-
-            <Typography
-              variant="caption"
-              sx={{ fontWeight: 800, color: COLORS.primary }}
-            >
-              {Math.round(progressValue)}%
-            </Typography>
-          </StackRow>
-
-          <LinearProgress
-            variant="determinate"
-            value={progressValue}
-            sx={{
-              height: 10,
-              borderRadius: 999,
-              backgroundColor: "rgba(46, 110, 101, 0.15)",
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: COLORS.primary,
-                borderRadius: 999,
-              },
-            }}
-          />
         </Box>
 
         {/* MODE A: QUESTION VIEW */}
         {!feedbackData && (
           <Fade in={!feedbackData}>
             <Box>
+              {/* Category Chip */}
               <Chip
                 label={currentQuestion.category}
                 variant="outlined"
@@ -202,6 +189,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 }}
               />
 
+              {/* Question Title */}
               <Typography
                 variant="h5"
                 sx={{ fontWeight: 900, mb: 2, color: COLORS.title }}
@@ -209,6 +197,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 {currentQuestion.title}
               </Typography>
 
+              {/* Question Description Box */}
               <Paper
                 variant="outlined"
                 sx={{
@@ -232,6 +221,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 </Typography>
               </Paper>
 
+              {/* The Question Itself */}
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 900, color: COLORS.title, mb: 2 }}
@@ -239,6 +229,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 {currentQuestion.question}
               </Typography>
 
+              {/* Input Field */}
               <TextField
                 label="מה דעתך?"
                 multiline
@@ -268,6 +259,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 }}
               />
 
+              {/* Submit Button */}
               <Button
                 variant="primary"
                 onClick={handleSubmit}
@@ -289,6 +281,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 )}
               </Button>
 
+              {/* Loading Text */}
               {loading && (
                 <Typography
                   variant="caption"
@@ -319,6 +312,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 משוב
               </Typography>
 
+              {/* Feedback Content */}
               <Paper
                 elevation={0}
                 sx={{
@@ -343,6 +337,7 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
                 </Typography>
               </Paper>
 
+              {/* Continue Button */}
               <Button
                 variant="primary"
                 onClick={handleContinue}
@@ -364,24 +359,6 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
       </Paper>
     </Box>
   );
-};
-
-// helper קטן (בלי import Stack)
-const StackRow = ({ children }) => (
-  <Box
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      mb: 0.75,
-    }}
-  >
-    {children}
-  </Box>
-);
-
-StackRow.propTypes = {
-  children: PropTypes.node,
 };
 
 StudentGame.propTypes = {
