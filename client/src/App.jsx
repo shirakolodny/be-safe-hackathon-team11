@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // MUI
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 
 // Components
 import Header from "./components/layout/Header";
+import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
@@ -23,17 +24,6 @@ const styles = {
     fontFamily: "Rubik, sans-serif",
     direction: "rtl",
   },
-  mainContainer: {
-    mt: 4,
-    flexGrow: 1,
-    textAlign: "center",
-  },
-  greeting: {
-    mb: 3,
-    fontWeight: 700,
-    textAlign: "center",
-    color: "#2B3752",
-  },
   footer: {
     p: 2,
     mt: "auto",
@@ -42,19 +32,14 @@ const styles = {
   },
 };
 
-function App() {
+export default function App() {
   const [user, setUser] = useState(null);
 
-  // 🔐 Login handler
   const handleLogin = (username, password) => {
     const foundUser = findUser(username, password);
+    if (!foundUser) return false;
 
-    if (!foundUser) {
-      return false;
-    }
-
-    setUser({ role: foundUser.role, username: foundUser.username }); // teacher | student
-    console.log("user:", username);
+    setUser({ role: foundUser.role, username: foundUser.username });
     return true;
   };
 
@@ -64,23 +49,35 @@ function App() {
     <Box sx={styles.appWrapper}>
       <Header onLogout={user ? handleLogout : undefined} />
 
-      <Container maxWidth="md" sx={styles.mainContainer}>
-        {/* 🔐 LOGIN */}
-        {!user && <LoginPage onLogin={handleLogin} />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-        {/* 👋 GREETING */}
-        {user && (
-          <Typography variant="h5" sx={styles.greeting}>
-            שלום {user.username}
-          </Typography>
-        )}
+        <Route
+          path="/login"
+          element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <LoginPage onLogin={handleLogin} />
+            )
+          }
+        />
 
-        {/* 👩‍🏫 TEACHER */}
-        {user?.role === "teacher" && <TeacherDashboard />}
+        <Route
+          path="/dashboard"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : user.role === "teacher" ? (
+              <TeacherDashboard />
+            ) : (
+              <StudentDashboard />
+            )
+          }
+        />
 
-        {/* 🧑‍🎓 STUDENT */}
-        {user?.role === "student" && <StudentDashboard />}
-      </Container>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
 
       <Box component="footer" sx={styles.footer}>
         <Typography variant="body2" color="text.secondary">
@@ -90,5 +87,3 @@ function App() {
     </Box>
   );
 }
-
-export default App;
