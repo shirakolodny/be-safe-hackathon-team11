@@ -83,6 +83,13 @@ const StudentGame = ({ gameCode, studentName, onGameFinished }) => {
         }
       );
 
+      // --- HANDLE GAME LOCKED SCENARIO ---
+      if (res.status === 403) {
+        alert("המשחק ננעל על ידי המורה. לא ניתן להמשיך.");
+        onGameFinished(); // Exit to lobby/finish screen
+        return;
+      }
+
       if (!res.ok) throw new Error("Submit failed");
 
       const data = await res.json();
