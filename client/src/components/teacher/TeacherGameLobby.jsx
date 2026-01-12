@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 
+// MUI Imports
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -16,6 +17,8 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Snackbar from "@mui/material/Snackbar";
 import Tooltip from "@mui/material/Tooltip";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
@@ -34,6 +37,9 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("lobby");
   const [copied, setCopied] = useState(false);
+  
+  // State for game active/locked status
+  const [isActive, setIsActive] = useState(true);
 
   const API_BASE = (
     import.meta?.env?.VITE_SERVER_API_URL || "http://localhost:5001"
@@ -41,6 +47,14 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
 
   const topicDisplay = useMemo(() => {
     return gameData?.topics?.map((t) => TOPIC_LABELS[t] || t).join(", ");
+  }, [gameData]);
+
+  // Sync local active state with server data
+  useEffect(() => {
+    if (gameData) {
+      // If server sends isActive status, update UI
+      setIsActive(gameData.isActive !== undefined ? gameData.isActive : true);
+    }
   }, [gameData]);
 
   useEffect(() => {
@@ -55,7 +69,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     const fetchGame = async () => {
       try {
         const code = String(gameCode).trim();
-        const res = await fetch(`${API_BASE}/admin/game/${code}`);
+        const res = await fetch(`${API_BASE}/games/${code}/results`);
 
         if (!res.ok) {
           throw new Error(`Failed to fetch: ${res.status}`);
@@ -72,6 +86,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
     };
 
     fetchGame();
+    // Poll every 5 seconds to update student list and status
     const intervalId = setInterval(fetchGame, 5001);
 
     return () => {
@@ -79,6 +94,25 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
       clearInterval(intervalId);
     };
   }, [API_BASE, gameCode]);
+
+  // Toggle Game Active/Locked Status
+  const handleToggleGame = async () => {
+    try {
+      // Optimistic UI update
+      const newState = !isActive;
+      setIsActive(newState);
+
+      // Call server to toggle lock
+      await fetch(`${API_BASE}/games/${gameCode}/toggle-lock`, {
+        method: "POST",
+      });
+      
+      // The polling interval will ensure data consistency shortly
+    } catch (err) {
+      console.error("Failed to toggle game", err);
+      setIsActive(!isActive); // Revert on error
+    }
+  };
 
   const handleCopyCode = async () => {
     const code = gameData?.gameCode || "";
@@ -211,6 +245,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           משחק בנושא: {topicDisplay}
         </Typography>
 
+        {/* Game Code Display */}
         <Box
           sx={{
             my: 2,
@@ -242,15 +277,44 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           </Tooltip>
         </Box>
 
-        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", gap: 4 }}>
+        {/* Stats and Controls Bar */}
+        <Box sx={{ mb: 3, display: "flex", justifyContent: "center", gap: 4, alignItems: "center", flexWrap: "wrap" }}>
           <Typography variant="h6">
             התחברו: <strong>{totalStudents}</strong>
           </Typography>
+
+          {/* Active/Locked Toggle Switch */}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isActive}
+                onChange={handleToggleGame}
+                color="success"
+              />
+            }
+            label={
+              <Typography sx={{ fontWeight: "bold", color: isActive ? "#2E6E65" : "#d32f2f" }}>
+                {isActive ? "משחק פעיל " : "משחק לא פעיל"}
+              </Typography>
+            }
+            sx={{ 
+                border: isActive ? "1px solid #2E6E65" : "1px solid #d32f2f", 
+                borderRadius: 2, 
+                pr: 2, 
+                pl: 1,
+                py: 0.5,
+                mr: 2,
+                ml: 2,
+                backgroundColor: isActive ? "rgba(46, 110, 101, 0.05)" : "rgba(211, 47, 47, 0.05)"
+            }}
+          />
+
           <Typography variant="h6">
             סיימו: <strong>{finishedCount}</strong>
           </Typography>
         </Box>
 
+        {/* Action Buttons */}
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -289,6 +353,7 @@ const TeacherGameLobby = ({ gameCode, onBack }) => {
           </Button>
         </Stack>
 
+        {/* Student Table */}
         <TableContainer component={Paper} elevation={1}>
           <Table stickyHeader dir="rtl">
             <TableHead>
