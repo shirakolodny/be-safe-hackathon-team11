@@ -1,11 +1,12 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // ייבוא הניווט
 import { Box, Typography, Button } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import SecurityIcon from "@mui/icons-material/Security";
 import SchoolIcon from "@mui/icons-material/School";
 
-const heroImage = "/images/besafepic.jpg";
+const heroImage = "/images/besafepic.png";
 
 function Feature({ Icon, title, text }) {
   return (
@@ -22,6 +23,8 @@ function Feature({ Icon, title, text }) {
 }
 
 export default function HomePage() {
+  const navigate = useNavigate(); // אתחול הניווט
+
   useEffect(() => {
     const root = document.getElementById("root");
     const html = document.documentElement;
@@ -61,7 +64,7 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <Box
         sx={{
-          flex: "0 0 72%", // הגדלה קלה של אזור ההירו
+          flex: "0 0 72%",
           display: "flex",
           alignItems: "center",
           backgroundColor: "#89b7c5ff",
@@ -77,7 +80,7 @@ export default function HomePage() {
             gap: 10,
           }}
         >
-          {/* תמונה בצד ימין - הוגדלה ל-55% */}
+          {/* תמונה בצד ימין - גדולה יותר (55%) */}
           <Box
             sx={{
               flex: "0 0 55%",
@@ -94,7 +97,7 @@ export default function HomePage() {
                 width: "100%",
                 height: "100%",
                 objectFit: "contain",
-                borderRadius: 12, // רדיוס מעט גדול יותר למראה מודרני
+                borderRadius: 12,
                 filter: "drop-shadow(0px 10px 20px rgba(0,0,0,0.15))",
               }}
             />
@@ -110,11 +113,11 @@ export default function HomePage() {
               py: 2,
             }}
           >
-            {/* כותרת - הוקטנה מעט */}
+            {/* כותרת - הוקטנה */}
             <Typography
               sx={{
                 fontWeight: 900,
-                fontSize: "clamp(2.5rem, 2.4vw, 2.8rem)", // הקטנה של הכותרת
+                fontSize: "clamp(1.8rem, 2.4vw, 2.8rem)",
                 lineHeight: 1.2,
                 color: "#0E2A2A",
               }}
@@ -124,11 +127,11 @@ export default function HomePage() {
               בטוח, חכם ומבוסס חוויה
             </Typography>
 
-            {/* תיאור - הוגדל משמעותית וקיבל מרחב */}
+            {/* תיאור - הוגדל משמעותית */}
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <Typography
                 sx={{
-                  fontSize: "clamp(1.3rem, 1.6vw, 1.8rem)", // הגדלה משמעותית
+                  fontSize: "clamp(1.3rem, 1.6vw, 1.8rem)",
                   lineHeight: 1.6,
                   fontWeight: 500,
                   color: "rgba(14, 42, 42, 0.9)",
@@ -139,14 +142,15 @@ export default function HomePage() {
               </Typography>
             </Box>
 
-            {/* כפתור */}
+            {/* כפתור כניסה עם ניווט */}
             <Box>
               <Button
                 variant="contained"
                 startIcon={<LoginIcon />}
+                onClick={() => navigate("/login")} // מעבר לדף לוגין
                 sx={{
-                  backgroundColor: "#2E6E65",
-                  px: 4, // כפתור רחב יותר
+                  backgroundColor: "#2B3752", // הצבע שציינת
+                  px: 6,
                   py: 2,
                   borderRadius: 1.5,
                   fontWeight: 800,
@@ -154,7 +158,7 @@ export default function HomePage() {
                   boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                   "& .MuiButton-startIcon": { ml: 2, mr: 0 },
                   "&:hover": {
-                    backgroundColor: "#255E56",
+                    backgroundColor: "#232d44ff",
                     transform: "translateY(-2px)",
                   },
                   transition: "all 0.2s",

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 // MUI
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -5,9 +8,12 @@ import Typography from "@mui/material/Typography";
 // Components
 import Header from "./components/layout/Header";
 import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import TeacherDashboard from "./pages/TeacherDashboard";
+import StudentDashboard from "./pages/StudentDashboard";
 
 // Auth helpers
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { findUser } from "./auth/demoUsers";
 
 const styles = {
   appWrapper: {
@@ -18,17 +24,6 @@ const styles = {
     fontFamily: "Rubik, sans-serif",
     direction: "rtl",
   },
-  mainContainer: {
-    mt: 4,
-    flexGrow: 1,
-    textAlign: "center",
-  },
-  greeting: {
-    mb: 3,
-    fontWeight: 700,
-    textAlign: "center",
-    color: "#2B3752",
-  },
   footer: {
     p: 2,
     mt: "auto",
@@ -37,13 +32,53 @@ const styles = {
   },
 };
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (username, password) => {
+    const foundUser = findUser(username, password);
+    if (!foundUser) return false;
+
+    setUser({ role: foundUser.role, username: foundUser.username });
+    return true;
+  };
+
+  const handleLogout = () => setUser(null);
+
   return (
     <Box sx={styles.appWrapper}>
-      <Header />
+      <Header onLogout={user ? handleLogout : undefined} />
+
       <Routes>
         <Route path="/" element={<HomePage />} />
+
+        <Route
+          path="/login"
+          element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <LoginPage onLogin={handleLogin} />
+            )
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : user.role === "teacher" ? (
+              <TeacherDashboard />
+            ) : (
+              <StudentDashboard />
+            )
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
       <Box component="footer" sx={styles.footer}>
         <Typography variant="body2" color="text.secondary">
           © 2025 QueenB Hackathon – Team 11
@@ -52,5 +87,3 @@ function App() {
     </Box>
   );
 }
-
-export default App;
