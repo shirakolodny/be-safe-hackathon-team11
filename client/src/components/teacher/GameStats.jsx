@@ -81,6 +81,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent }) => {
         dominantBaseline="central"
         fontWeight="bold"
         fontSize="14px"
+        fontFamily="Rubik, sans-serif" // Uniform font
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -196,6 +197,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
           mx: "auto",
           direction: "rtl",
           borderRadius: 3,
+          fontFamily: "Rubik, sans-serif", // Uniform font
         }}
       >
         <Stack spacing={5}>
@@ -207,7 +209,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
           >
             <Typography
               variant="h5"
-              sx={{ fontWeight: 900, color: THEME.title }}
+              sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}
             >
               סטטיסטיקות משחק
             </Typography>
@@ -220,6 +222,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 border: `2px solid ${THEME.primary}`,
                 backgroundColor: "transparent",
                 fontWeight: "bold",
+                fontFamily: "Rubik, sans-serif",
                 px: 2.2,
                 py: 1,
                 "&:hover": {
@@ -241,20 +244,20 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 <CardContent sx={{ textAlign: "right", p: 3 }}>
                     <Stack direction="row" alignItems="center" gap={1} mb={2} justifyContent="flex-start">
                         <AutoAwesomeIcon sx={{ color: "#2E6E65" }} />
-                        <Typography variant="h6" fontWeight="bold" color="#2E6E65">
+                        <Typography variant="h6" fontWeight="bold" color="#2E6E65" fontFamily="Rubik, sans-serif">
                              המלצות להמשך
                         </Typography>
                     </Stack>
 
                     {isActive ? (
-                        <Typography color="text.secondary" sx={{ fontStyle: "italic" }}>
+                        <Typography color="text.secondary" sx={{ fontStyle: "italic", fontFamily: "Rubik, sans-serif" }}>
                             המשחק כעת פעיל. בסיום המשחק (כשתנעל/י אותו), המערכת תנתח את התוצאות ותפיק המלצות פדגוגיות להמשך השיעור.
                         </Typography>
                     ) : (
                         loadingSummary ? (
-                            <Typography>מנתח נתונים ומגבש המלצות...</Typography>
+                            <Typography fontFamily="Rubik, sans-serif">מנתח נתונים ומגבש המלצות...</Typography>
                         ) : (
-                            <Typography sx={{ whiteSpace: "pre-line", lineHeight: 1.8 }}>
+                            <Typography sx={{ whiteSpace: "pre-line", lineHeight: 1.8, fontFamily: "Rubik, sans-serif" }}>
                                 {summary || "לא התקבלו המלצות."}
                             </Typography>
                         )
@@ -268,6 +271,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
               color: "text.secondary",
               textAlign: "right",
               lineHeight: 1.8,
+              fontFamily: "Rubik, sans-serif",
             }}
           >
             שיקלול משוקלל לכל נושא + שיקלול כולל לכל המשחק +
@@ -292,12 +296,12 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 gap: 1.2,
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" fontFamily="Rubik, sans-serif">
                 סה״כ שאלות שנענו
               </Typography>
               <Typography
                 variant="h4"
-                sx={{ fontWeight: 900, color: THEME.title }}
+                sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}
               >
                 {overallTotalCount}
               </Typography>
@@ -315,13 +319,13 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 gap: 1.2,
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" fontFamily="Rubik, sans-serif">
                 ציון כללי משוקלל
               </Typography>
 
               <Typography
                 variant="h4"
-                sx={{ fontWeight: 900, color: THEME.title }}
+                sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}
               >
                 {overallTotalCount > 0 ? overallAvg.toFixed(2) : "-"} /{" "}
                 {scoreScaleMax}
@@ -333,10 +337,10 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                   justifyContent="space-between"
                   sx={{ mb: 0.8 }}
                 >
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" fontFamily="Rubik, sans-serif">
                     אחוז מהציון המקסימלי
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" fontFamily="Rubik, sans-serif">
                     {overallTotalCount > 0 ? Math.round(overallPercent) : 0}%
                   </Typography>
                 </Stack>
@@ -369,6 +373,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 fontWeight: 900,
                 textAlign: "right",
                 color: THEME.title,
+                fontFamily: "Rubik, sans-serif",
               }}
             >
               התפלגות שאלות לפי נושא
@@ -392,7 +397,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                   {pieData.length === 0 ? (
                     <Typography
                       color="text.secondary"
-                      sx={{ textAlign: "right", mt: 2 }}
+                      sx={{ textAlign: "right", mt: 2, fontFamily: "Rubik, sans-serif" }}
                     >
                       עדיין אין נתונים לגרף (עוד לא נענו שאלות).
                     </Typography>
@@ -433,8 +438,10 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                             borderRadius: 12,
                             border: `1px solid ${THEME.border}`,
                             textAlign: "right",
-                            direction: "rtl"
+                            direction: "rtl",
+                            fontFamily: "Rubik, sans-serif"
                           }}
+                          itemStyle={{ fontFamily: "Rubik, sans-serif" }}
                         />
                       </PieChart>
                     </ResponsiveContainer>
@@ -457,6 +464,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                     mb: 2,
                     textAlign: "right",
                     color: THEME.title,
+                    fontFamily: "Rubik, sans-serif",
                   }}
                 >
                   מקרא
@@ -466,7 +474,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                   {pieData.length === 0 ? (
                     <Typography
                       color="text.secondary"
-                      sx={{ textAlign: "right" }}
+                      sx={{ textAlign: "right", fontFamily: "Rubik, sans-serif" }}
                     >
                       אין מה להציג עדיין.
                     </Typography>
@@ -494,14 +502,14 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                             }}
                           />
                           <Typography
-                            sx={{ color: THEME.title, fontWeight: 700 }}
+                            sx={{ color: THEME.title, fontWeight: 700, fontFamily: "Rubik, sans-serif" }}
                           >
                             {d.name}
                           </Typography>
                         </Stack>
 
                         <Typography
-                          sx={{ color: THEME.primary, fontWeight: 900 }}
+                          sx={{ color: THEME.primary, fontWeight: 900, fontFamily: "Rubik, sans-serif" }}
                         >
                           {/* Use our renamed dataPercent */}
                           {Math.round(d.dataPercent)}%
@@ -525,6 +533,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 fontWeight: 900,
                 textAlign: "right",
                 color: THEME.title,
+                fontFamily: "Rubik, sans-serif",
               }}
             >
               כמה שאלות נענו בכל נושא
@@ -548,11 +557,11 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                     <XAxis
                       dataKey="topic"
                       interval={0}
-                      tick={{ fontSize: 12, fill: THEME.title }}
+                      tick={{ fontSize: 12, fill: THEME.title, fontFamily: "Rubik, sans-serif" }}
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fontSize: 12, fill: THEME.title }}
+                      tick={{ fontSize: 12, fill: THEME.title, fontFamily: "Rubik, sans-serif" }}
                       tickMargin={10}
                     />
                     <ReTooltip
@@ -563,7 +572,9 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                       contentStyle={{
                         borderRadius: 12,
                         border: `1px solid ${THEME.border}`,
+                        fontFamily: "Rubik, sans-serif"
                       }}
+                      itemStyle={{ fontFamily: "Rubik, sans-serif" }}
                     />
 
                     <Bar dataKey="count" fill={THEME.primary}>
@@ -572,6 +583,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                         position="top"
                         formatter={(v) => `${Math.round(v)}%`}
                         fill={THEME.primary}
+                        style={{ fontFamily: "Rubik, sans-serif" }}
                       />
                     </Bar>
                   </BarChart>
@@ -591,6 +603,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 fontWeight: 900,
                 textAlign: "right",
                 color: THEME.title,
+                fontFamily: "Rubik, sans-serif",
               }}
             >
               ציון משוקלל לכל נושא
@@ -614,11 +627,11 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                     <XAxis
                       dataKey="topic"
                       interval={0}
-                      tick={{ fontSize: 12, fill: THEME.title }}
+                      tick={{ fontSize: 12, fill: THEME.title, fontFamily: "Rubik, sans-serif" }}
                     />
                     <YAxis
                       domain={[0, scoreScaleMax]}
-                      tick={{ fontSize: 12, fill: THEME.title }}
+                      tick={{ fontSize: 12, fill: THEME.title, fontFamily: "Rubik, sans-serif" }}
                       tickMargin={10}
                     />
                     <ReTooltip
@@ -632,7 +645,9 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                       contentStyle={{
                         borderRadius: 12,
                         border: `1px solid ${THEME.border}`,
+                        fontFamily: "Rubik, sans-serif"
                       }}
+                      itemStyle={{ fontFamily: "Rubik, sans-serif" }}
                     />
                     <Bar dataKey="avg" fill={THEME.primary}>
                       <LabelList
@@ -642,6 +657,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                           Number(v) ? Number(v).toFixed(1) : "0"
                         }
                         fill={THEME.primary}
+                        style={{ fontFamily: "Rubik, sans-serif" }}
                       />
                     </Bar>
                   </BarChart>
@@ -661,6 +677,7 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 fontWeight: 900,
                 textAlign: "right",
                 color: THEME.title,
+                fontFamily: "Rubik, sans-serif",
               }}
             >
               טבלה מסכמת
@@ -678,24 +695,24 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
               <Table>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: "rgba(46,110,101,0.08)" }}>
-                    <TableCell sx={{ fontWeight: 900, color: THEME.title }}>
+                    <TableCell sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}>
                       נושא
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontWeight: 900, color: THEME.title }}
+                      sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}
                     >
                       שאלות שנענו
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontWeight: 900, color: THEME.title }}
+                      sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}
                     >
                       אחוז מכלל השאלות
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontWeight: 900, color: THEME.title }}
+                      sx={{ fontWeight: 900, color: THEME.title, fontFamily: "Rubik, sans-serif" }}
                     >
                       ציון משוקלל לנושא
                     </TableCell>
@@ -705,19 +722,19 @@ const GameStats = ({ gameData, topicLabels, onBackToLobby }) => {
                 <TableBody>
                   {perTopicWithPercent.map((t) => (
                     <TableRow key={t.topic} hover>
-                      <TableCell sx={{ color: THEME.title, fontWeight: 700 }}>
+                      <TableCell sx={{ color: THEME.title, fontWeight: 700, fontFamily: "Rubik, sans-serif" }}>
                         {t.label}
                       </TableCell>
-                      <TableCell align="center" sx={{ color: THEME.title }}>
+                      <TableCell align="center" sx={{ color: THEME.title, fontFamily: "Rubik, sans-serif" }}>
                         {t.totalCount}
                       </TableCell>
                       <TableCell
                         align="center"
-                        sx={{ color: THEME.primary, fontWeight: 900 }}
+                        sx={{ color: THEME.primary, fontWeight: 900, fontFamily: "Rubik, sans-serif" }}
                       >
                         {Math.round(t.percent)}%
                       </TableCell>
-                      <TableCell align="center" sx={{ color: THEME.title }}>
+                      <TableCell align="center" sx={{ color: THEME.title, fontFamily: "Rubik, sans-serif" }}>
                         {t.totalCount > 0 ? t.avg.toFixed(2) : "-"}
                       </TableCell>
                     </TableRow>

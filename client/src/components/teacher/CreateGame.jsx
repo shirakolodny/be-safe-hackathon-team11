@@ -70,229 +70,247 @@ const CreateGame = ({ onBack, onGameCreated }) => {
   };
 
   return (
-    <Paper
-      elevation={0}
+    // Outer Box to center the content vertically and horizontally
+    <Box
       sx={{
-        p: 4,
-        maxWidth: 650,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "60vh", // Ensures vertical centering
         width: "100%",
-        mx: "auto",
-        borderRadius: 3,
-        border: `1.5px solid ${COLORS.paperBorder}`,
-        backgroundColor: "#fff",
-        direction: "rtl",
-        fontFamily: "Rubik, sans-serif", // Default font for the paper
+        py: 4,
       }}
     >
-      <Typography
-        variant="h5"
+      <Paper
+        elevation={0}
         sx={{
-          mb: 1,
-          fontWeight: 800,
-          color: COLORS.title,
-          fontFamily: "Rubik, sans-serif",
-          textAlign: "right",
-        }}
-      >
-        בחירת נושאים בהם המשחק יתמקד
-      </Typography>
-
-      <Typography
-        variant="body1"
-        sx={{
-          mb: 3,
-          color: COLORS.textMuted,
-          textAlign: "right",
-          lineHeight: 1.8,
-          fontFamily: "Rubik, sans-serif",
-        }}
-      >
-        אפשר לבחור כמה נושאים. לאחר יצירת המשחק יופק קוד כניסה לתלמידים.
-      </Typography>
-
-      <TextField
-        select
-        label="נושאי השיעור (ניתן לבחור כמה)"
-        fullWidth
-        value={selectedTopics}
-        onChange={handleChange}
-        dir="rtl"
-        sx={{
-          mb: 3,
-
-          // Text inside the field (selection)
-          "& .MuiSelect-select": {
-            color: COLORS.primary,
-            fontWeight: 600,
-            fontFamily: "Rubik, sans-serif",
-          },
-
-          // Default label (gray)
-          "& .MuiInputLabel-root": {
-            color: "#7b7b7b",
-            fontFamily: "Rubik, sans-serif",
-          },
-
-          // Focused label (green)
-          "& .MuiInputLabel-root.Mui-focused": {
-            color: COLORS.primary,
-          },
-
-          // Standard border
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "rgba(43, 55, 82, 0.25)",
-          },
-
-          // Hover over field
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: COLORS.primary,
-          },
-
-          // Focused border
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-            {
-              borderColor: COLORS.primary,
-            },
-        }}
-        SelectProps={{
-          multiple: true,
-          MenuProps: {
-            PaperProps: {
-              sx: {
-                borderRadius: 2,
-                border: `1px solid ${COLORS.paperBorder}`,
-                mt: 1,
-                "& .MuiMenuItem-root": {
-                  color: COLORS.title,
-                  fontFamily: "Rubik, sans-serif", // Font for menu items
-                },
-                "& .MuiMenuItem-root:hover": {
-                  backgroundColor: "rgba(46,110,101,0.08)",
-                },
-                "& .MuiMenuItem-root.Mui-selected": {
-                  backgroundColor: "rgba(46,110,101,0.16)",
-                },
-                "& .MuiMenuItem-root.Mui-selected:hover": {
-                  backgroundColor: "rgba(46,110,101,0.24)",
-                },
-              },
-            },
-          },
-
-          renderValue: (selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75 }}>
-              {selected.map((value) => {
-                const topic = TOPICS.find((t) => t.value === value);
-                return (
-                  <Chip
-                    key={value}
-                    label={topic ? topic.label : value}
-                    sx={{
-                      backgroundColor: COLORS.primary,
-                      color: "#fff",
-                      fontWeight: 700,
-                      borderRadius: 2,
-                      fontFamily: "Rubik, sans-serif", // Font for chips
-                    }}
-                  />
-                );
-              })}
-            </Box>
-          ),
-        }}
-      >
-        {TOPICS.map((topic) => (
-          <MenuItem key={topic.value} value={topic.value} dir="rtl">
-            {topic.label}
-          </MenuItem>
-        ))}
-      </TextField>
-
-      <Box
-        sx={{
-          p: 2,
-          mb: 3,
-          borderRadius: 2,
-          backgroundColor: COLORS.softBg,
-          border: `1px solid rgba(46,110,101,0.25)`,
-          textAlign: "right",
+          p: 5, // Increased padding
+          maxWidth: 700, // Slightly wider
+          width: "100%",
+          borderRadius: 3,
+          border: `1.5px solid ${COLORS.paperBorder}`,
+          backgroundColor: "#fff",
+          direction: "rtl",
+          fontFamily: "Rubik, sans-serif", // Default font for the paper
         }}
       >
         <Typography
+          variant="h5"
           sx={{
+            mb: 1,
             fontWeight: 800,
             color: COLORS.title,
-            mb: 0.5,
+            fontFamily: "Rubik, sans-serif",
+            textAlign: "right",
+          }}
+        >
+          בחירת נושאים בהם המשחק יתמקד
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{
+            mb: 3,
+            color: COLORS.textMuted,
+            textAlign: "right",
+            lineHeight: 1.8,
             fontFamily: "Rubik, sans-serif",
           }}
         >
-          נבחרו:
+          אפשר לבחור כמה נושאים. לאחר יצירת המשחק יופק קוד כניסה לתלמידים.
         </Typography>
 
-        {selectedTopics.length === 0 ? (
-          <Typography color="text.secondary" sx={{ fontFamily: "Rubik, sans-serif" }}>
-            עדיין לא נבחרו נושאים.
-          </Typography>
-        ) : (
+        <TextField
+          select
+          label="נושאי השיעור (ניתן לבחור כמה)"
+          fullWidth
+          value={selectedTopics}
+          onChange={handleChange}
+          dir="rtl"
+          sx={{
+            mb: 3,
+
+            // Text inside the field (selection)
+            "& .MuiSelect-select": {
+              color: COLORS.primary,
+              fontWeight: 600,
+              fontFamily: "Rubik, sans-serif",
+            },
+
+            // Default label (gray)
+            "& .MuiInputLabel-root": {
+              color: "#7b7b7b",
+              fontFamily: "Rubik, sans-serif",
+            },
+
+            // Focused label (green)
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: COLORS.primary,
+            },
+
+            // Standard border
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(43, 55, 82, 0.25)",
+            },
+
+            // Hover over field
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: COLORS.primary,
+            },
+
+            // Focused border
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: COLORS.primary,
+              },
+          }}
+          SelectProps={{
+            multiple: true,
+            MenuProps: {
+              PaperProps: {
+                sx: {
+                  borderRadius: 2,
+                  border: `1px solid ${COLORS.paperBorder}`,
+                  mt: 1,
+                  "& .MuiMenuItem-root": {
+                    color: COLORS.title,
+                    fontFamily: "Rubik, sans-serif", // Font for menu items
+                  },
+                  "& .MuiMenuItem-root:hover": {
+                    backgroundColor: "rgba(46,110,101,0.08)",
+                  },
+                  "& .MuiMenuItem-root.Mui-selected": {
+                    backgroundColor: "rgba(46,110,101,0.16)",
+                  },
+                  "& .MuiMenuItem-root.Mui-selected:hover": {
+                    backgroundColor: "rgba(46,110,101,0.24)",
+                  },
+                },
+              },
+            },
+
+            renderValue: (selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75 }}>
+                {selected.map((value) => {
+                  const topic = TOPICS.find((t) => t.value === value);
+                  return (
+                    <Chip
+                      key={value}
+                      label={topic ? topic.label : value}
+                      sx={{
+                        backgroundColor: COLORS.primary,
+                        color: "#fff",
+                        fontWeight: 700,
+                        borderRadius: 2,
+                        fontFamily: "Rubik, sans-serif", // Font for chips
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+            ),
+          }}
+        >
+          {TOPICS.map((topic) => (
+            <MenuItem key={topic.value} value={topic.value} dir="rtl">
+              {topic.label}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <Box
+          sx={{
+            p: 2,
+            mb: 3,
+            borderRadius: 2,
+            backgroundColor: COLORS.softBg,
+            border: `1px solid rgba(46,110,101,0.25)`,
+            textAlign: "right",
+          }}
+        >
           <Typography
             sx={{
-              color: COLORS.primary,
-              fontWeight: 700,
+              fontWeight: 800,
+              color: COLORS.title,
+              mb: 0.5,
               fontFamily: "Rubik, sans-serif",
             }}
           >
-            {selectedTopics
-              .map((v) => TOPICS.find((t) => t.value === v)?.label || v)
-              .join(" • ")}
+            נבחרו:
           </Typography>
-        )}
-      </Box>
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Button
-          variant="secondary"
-          onClick={onBack}
-          sx={{
-            color: COLORS.primary,
-            border: `2px solid ${COLORS.primary}`,
-            backgroundColor: "transparent",
-            fontWeight: "bold",
-            fontFamily: "Rubik, sans-serif", // Font for button
-            px: 4,
-            py: 1.2,
-            "&:hover": {
-              backgroundColor: COLORS.softBg,
-              borderColor: COLORS.primaryHover,
-            },
-          }}
-        >
-          ביטול
-        </Button>
+          {selectedTopics.length === 0 ? (
+            <Typography
+              color="text.secondary"
+              sx={{ fontFamily: "Rubik, sans-serif" }}
+            >
+              עדיין לא נבחרו נושאים.
+            </Typography>
+          ) : (
+            <Typography
+              sx={{
+                color: COLORS.primary,
+                fontWeight: 700,
+                fontFamily: "Rubik, sans-serif",
+              }}
+            >
+              {selectedTopics
+                .map((v) => TOPICS.find((t) => t.value === v)?.label || v)
+                .join(" • ")}
+            </Typography>
+          )}
+        </Box>
 
-        <Button
-          variant="success"
-          onClick={handleCreateGame}
-          disabled={selectedTopics.length === 0 || loading}
-          sx={{
-            backgroundColor: COLORS.primary,
-            color: "#fff",
-            fontWeight: "bold",
-            fontFamily: "Rubik, sans-serif", // Font for button
-            px: 4,
-            py: 1.2,
-            "&:hover": {
-              backgroundColor: COLORS.primaryHover,
-            },
-            "&.Mui-disabled": {
-              backgroundColor: "#cfcfcf",
-              color: "#ffffff",
-            },
-          }}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          {loading ? "יוצר משחק..." : "קבל/י קוד משחק"}
-        </Button>
-      </Stack>
-    </Paper>
+          <Button
+            variant="secondary"
+            onClick={onBack}
+            sx={{
+              color: COLORS.primary,
+              border: `2px solid ${COLORS.primary}`,
+              backgroundColor: "transparent",
+              fontWeight: "bold",
+              fontFamily: "Rubik, sans-serif", // Font for button
+              px: 4,
+              py: 1.2,
+              "&:hover": {
+                backgroundColor: COLORS.softBg,
+                borderColor: COLORS.primaryHover,
+              },
+            }}
+          >
+            ביטול
+          </Button>
+
+          <Button
+            variant="success"
+            onClick={handleCreateGame}
+            disabled={selectedTopics.length === 0 || loading}
+            sx={{
+              backgroundColor: COLORS.primary,
+              color: "#fff",
+              fontWeight: "bold",
+              fontFamily: "Rubik, sans-serif", // Font for button
+              px: 4,
+              py: 1.2,
+              "&:hover": {
+                backgroundColor: COLORS.primaryHover,
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#cfcfcf",
+                color: "#ffffff",
+              },
+            }}
+          >
+            {loading ? "יוצר משחק..." : "קבל/י קוד משחק"}
+          </Button>
+        </Stack>
+      </Paper>
+    </Box>
   );
 };
 

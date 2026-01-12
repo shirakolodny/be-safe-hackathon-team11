@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 // MUI Imports
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box"; // Changed from Stack to Box for better control
+import Box from "@mui/material/Box";
 // Icons
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AssessmentIcon from "@mui/icons-material/Assessment";
@@ -18,10 +18,10 @@ const TeacherMenu = ({ onNavigate }) => {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: 2, 
-    borderRadius: 4, 
+    gap: 2,
+    borderRadius: 4,
     transition: "all 0.3s ease",
-    fontFamily: "Rubik, sans-serif", 
+    fontFamily: "Rubik, sans-serif",
 
     // Standard border
     border: "1px solid transparent",
@@ -44,31 +44,31 @@ const TeacherMenu = ({ onNavigate }) => {
   return (
     <Box
       sx={{
-        display: "flex", // Use standard Flexbox
+        display: "flex",
         flexDirection: "row", // Force items to be in a row
         justifyContent: "center", // Center horizontally
         alignItems: "center", // Center vertically
         flexWrap: "wrap", // Allow wrapping on small screens
-        gap: 4, // --- EXPLICIT CSS GAP (32px) ---
-        mt: 4,
-        width: "100%"
+        gap: 6, // Increased gap for better separation (48px)
+        width: "100%",
+        minHeight: "60vh", // ADDED: Takes up vertical space to center items vertically
       }}
     >
       {/* Option 1: Create New Game */}
       <Paper elevation={4} sx={cardStyle} onClick={() => onNavigate("create")}>
         <AddCircleOutlineIcon sx={{ fontSize: 70, color: "#2E6E65" }} />
-        <Typography 
-            variant="h5" 
-            fontWeight="bold" 
-            sx={{ fontFamily: "Rubik, sans-serif", textAlign: "center" }}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ fontFamily: "Rubik, sans-serif", textAlign: "center" }}
         >
           פתיחת משחק חדש
         </Typography>
-        <Typography 
-            variant="body1" 
-            color="text.secondary" 
-            align="center" 
-            sx={{ fontFamily: "Rubik, sans-serif" }}
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          align="center"
+          sx={{ fontFamily: "Rubik, sans-serif" }}
         >
           בחירת נושא/ים להתמקדות וקבלת קוד משחק
         </Typography>
@@ -77,18 +77,18 @@ const TeacherMenu = ({ onNavigate }) => {
       {/* Option 2: View Stats */}
       <Paper elevation={4} sx={cardStyle} onClick={() => onNavigate("stats")}>
         <AssessmentIcon sx={{ fontSize: 70, color: "#2E6E65" }} />
-        <Typography 
-            variant="h5" 
-            fontWeight="bold" 
-            sx={{ fontFamily: "Rubik, sans-serif", textAlign: "center" }}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ fontFamily: "Rubik, sans-serif", textAlign: "center" }}
         >
           כניסה למשחק קיים
         </Typography>
-        <Typography 
-            variant="body1" 
-            color="text.secondary" 
-            align="center" 
-            sx={{ fontFamily: "Rubik, sans-serif" }}
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          align="center"
+          sx={{ fontFamily: "Rubik, sans-serif" }}
         >
           צפייה בסטטיסטיקות של משחק פעיל
         </Typography>

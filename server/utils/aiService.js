@@ -95,12 +95,40 @@ export const analyzeAnswerWithAI = async (question, studentAnswer, category) => 
  */
 export const generateClassSummary = async (stats) => {
   try {
+    // --- FIX START: Filter out unattempted topics ---
+    
+    // Create a new object containing only topics with a score > 0
+    const activeStats = {};
+    let hasActivity = false;
+
+    if (stats) {
+        for (const [topic, score] of Object.entries(stats)) {
+            // We assume a score of 0 means "no answers" or "not reached yet"
+            if (Number(score) > 0) {
+                activeStats[topic] = score;
+                hasActivity = true;
+            }
+        }
+    }
+
+    // If no topics have activity, return a static message immediately
+    if (!hasActivity) {
+        return "לא נענו עדיין שאלות בשום נושא, ולכן לא ניתן להפיק דוח פדגוגי כרגע.";
+    }
+
+    // --- FIX END ---
+
     const model = "gpt-4o-mini";
 
     const prompt = `
       You are an expert pedagogical consultant for a Cyber Safety curriculum.
-      Analyze the following class performance data (Topic: Average Score out of 10):
-      ${JSON.stringify(stats)}
+      Analyze the following class performance data (Topic: Average Score out of 10).
+      
+      IMPORTANT: Only topics with actual data are included below. 
+      Ignore any missing topics.
+
+      Data:
+      ${JSON.stringify(activeStats)}
 
       Your task:
       1. Identify the topics where students struggled the most (lowest scores).

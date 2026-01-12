@@ -10,10 +10,12 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 
+// Custom style for the text fields to match the green theme
 const focusedGreenTextField = {
   "& .MuiInputBase-input": {
     color: "#000",
     fontFamily: "Rubik, sans-serif",
+    fontSize: "1.1rem", // Slightly larger text
   },
   "& .MuiInputBase-input:focus": {
     color: "#2E6E65",
@@ -21,6 +23,7 @@ const focusedGreenTextField = {
   "& .MuiInputLabel-root": {
     color: "#9e9e9e",
     fontFamily: "Rubik, sans-serif",
+    fontSize: "1rem",
   },
   "& .MuiInputLabel-root.Mui-focused": {
     color: "#2E6E65",
@@ -58,25 +61,27 @@ const LoginPage = ({ onLogin }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        py: 6,
+        minHeight: "85vh", // Ensures vertical centering on full screen
+        py: 4,
       }}
     >
-      <Container maxWidth="xs">
+      {/* Changed maxWidth to 'sm' for a wider card */}
+      <Container maxWidth="sm">
         <Paper
-          elevation={3}
+          elevation={4} // Slightly deeper shadow
           sx={{
-            p: 3,
-            borderRadius: 3,
+            p: 6, // Increased padding for a bigger look
+            borderRadius: 4,
             border: "1px solid",
             borderColor: "divider",
           }}
         >
           <Box component="form" onSubmit={handleSubmit}>
             <Typography
-              variant="h5"
+              variant="h4" // Increased font size from h5
               align="center"
               sx={{
-                mb: 2,
+                mb: 4, // More spacing below title
                 fontFamily: "Rubik, sans-serif",
                 fontWeight: 800,
                 color: "#2B3752",
@@ -92,7 +97,10 @@ const LoginPage = ({ onLogin }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               dir="rtl"
-              sx={focusedGreenTextField}
+              sx={{
+                ...focusedGreenTextField,
+                mb: 3, // Add extra spacing between fields
+              }}
             />
 
             <TextField
@@ -103,11 +111,22 @@ const LoginPage = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               dir="rtl"
-              sx={focusedGreenTextField}
+              sx={{
+                ...focusedGreenTextField,
+                mb: 2,
+              }}
             />
 
             {error && (
-              <Alert severity="error" sx={{ mt: 2, textAlign: "right" }}>
+              <Alert 
+                severity="error" 
+                sx={{ 
+                    mt: 2, 
+                    mb: 2, 
+                    textAlign: "right",
+                    fontFamily: "Rubik, sans-serif" 
+                }}
+              >
                 {error}
               </Alert>
             )}
@@ -116,9 +135,11 @@ const LoginPage = ({ onLogin }) => {
               fullWidth
               type="submit"
               variant="contained"
+              size="large" // Make button taller
               sx={{
-                mt: 3,
-                py: 1.2,
+                mt: 4,
+                py: 1.5, // Increased vertical padding
+                fontSize: "1.2rem",
                 fontWeight: "bold",
                 fontFamily: "Rubik, sans-serif",
                 backgroundColor: "#2E6E65",
